@@ -14,6 +14,7 @@ import RegistrationPage from './registrationPage';
 import temp from "./temp";
 import UserRegistraion from './userRegistration';
 import CustomerRegistration from './customerRegistration';
+import ManagerRegistration from './managerRegistration';
 
 function App() {
   return (
@@ -27,7 +28,7 @@ function App() {
           <Route path="/register" exact component = { RegistrationPage } />
           <Route path="/register/user" exact component = {UserRegistraion} />
           <Route path="/register/customer" exact component = {CustomerRegistration} />
-          <Route path="/register/manager" exact component = {temp} />
+          <Route path="/register/manager" exact component = {ManagerRegistration} />
           <Route path="/register/managerCustomer" exact component = {temp} />
         </Switch>
 
