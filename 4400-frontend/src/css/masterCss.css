@@ -6,8 +6,15 @@
     text-align: center;
 }
 
-.Form {
+.LoginForm {
     width: 20vw;
+    border: 2px solid black;
+    padding: 50px;
+    margin: auto;
+}
+
+.RegistrationForm {
+    width: 40vw;
     border: 2px solid black;
     padding: 50px;
     margin: auto;

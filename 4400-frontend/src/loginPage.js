@@ -25,7 +25,7 @@ function LoginPage() {
   }
 
   const navigateToRegister = () => {
-    history.push("/registrationPage");
+    history.push("/register");
   }
 
   const handleInput = (target) => {
@@ -54,7 +54,7 @@ function LoginPage() {
         <h2>Atlanta Movie Login</h2>
       </div>
       
-      <div className="Form">
+      <div className="LoginForm">
         <Form>
           <FormGroup>
             <Label for="inputUsername"> Username </Label>
@@ -62,7 +62,7 @@ function LoginPage() {
           </FormGroup>
 
           <FormGroup>
-            <Label for="inputPassword"> Username </Label>
+            <Label for="inputPassword"> Password </Label>
             <Input type="password" onChange={(e) => handleInput(e.target)} id="inputPassword" placeholder="Enter password" />
           </FormGroup>
 
