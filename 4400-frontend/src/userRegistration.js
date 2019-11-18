@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Form, FormGroup, Label, Input, Col, Row } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Col, Row, Alert } from 'reactstrap';
 import {useHistory} from 'react-router-dom';
 
 function UserRegistration() {
@@ -10,6 +10,9 @@ function UserRegistration() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [passwordShort, setPasswordShort] = useState(false);
+  const [passwordMatch, setPasswordMatch] = useState(false);
 
   const handleInput = (target) => {
     var id = target.id;
@@ -29,7 +32,7 @@ function UserRegistration() {
 
     } else if (id === "inputConfirmPassword") {
       setConfirmPassword(val);
-    }    
+    }
   }
 
   const goBack = () => {
@@ -37,7 +40,18 @@ function UserRegistration() {
   }
 
   const register = () => {
-    console.log("hi");
+    setPasswordMatch(false);
+    setPasswordShort(false);
+
+    console.log("first Name", firstName, "last Name", lastName, "username", username, "password", password, "confirmPass", confirmPassword);
+
+    if (password.length < 7) {
+      setPasswordShort(true);
+    }
+    if (password !== confirmPassword) {
+      setPasswordMatch(true);
+    }
+
   }
 
   return (
@@ -51,14 +65,14 @@ function UserRegistration() {
               <Col md={6}>
                 <FormGroup>
                   <Label for="inputFirstName"> First Name </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputUsername" placeholder="Enter username" />
+                  <Input onChange={(e) => handleInput(e.target)} id="inputFirstName" placeholder="Enter username" />
                 </FormGroup>
               </Col>
 
               <Col>
                 <FormGroup>
                   <Label for="inputLastName"> Last Name </Label>
-                  <Input type="password" onChange={(e) => handleInput(e.target)} id="inputPassword" placeholder="Enter password" />
+                  <Input onChange={(e) => handleInput(e.target)} id="inputLastName" placeholder="Enter password" />
                 </FormGroup>
               </Col>
             </Row>
@@ -79,10 +93,18 @@ function UserRegistration() {
               <Col md={6}>
                 <FormGroup>
                   <Label for="inputConfirmPassword"> Confirm Password </Label>
-                  <Input type="password" onChange={(e) => handleInput(e.target)} id="inputPassword" placeholder="Enter password" />
+                  <Input type="password" onChange={(e) => handleInput(e.target)} id="inputConfirmPassword" placeholder="Enter password" />
                 </FormGroup>
               </Col>
             </Row>
+
+            <Alert isOpen={passwordShort} color="danger">
+              Password must be at least 8 characters!
+            </Alert>
+
+            <Alert isOpen={passwordMatch} color="danger">
+              Passwords did not match!
+            </Alert>
 
             <div className="LoginButton">
               <Button color="primary" onClick={ goBack }>Back</Button> {' '}
