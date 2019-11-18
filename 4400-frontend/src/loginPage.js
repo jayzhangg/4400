@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 // import { ToggleButton, ToggleButtonGroup, Button, Form } from 'react-bootstrap';
-import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Alert } from 'reactstrap';
 import { useHistory } from 'react-router-dom';
 
 import './loginPage.css';
@@ -9,14 +9,20 @@ function LoginPage() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
 
   let history = useHistory();
 
   const validateLogin = () => {
     // Make an API call to check if username and pass are valid, then use setValid(true/false) to change state
     console.log("username:", username, "password:", password);
+    setShowAlert(false);
+
+    // If username is correct, navigate away, else display error
     if (username === "" && password === "") {
       history.push("/functionalityPage");
+    } else {
+      setShowAlert(true);
     }
   }
 
@@ -61,6 +67,10 @@ function LoginPage() {
             <Label for="inputPassword"> Username </Label>
             <Input type="password" onChange={(e) => handleInput(e.target)} id="inputPassword" placeholder="Enter password" />
           </FormGroup>
+
+          <Alert isOpen={showAlert} color="danger">
+            Wrong Username + Password combination. Try again!
+          </Alert>
 
         </Form>
       </div>
