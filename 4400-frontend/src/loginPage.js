@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 // import { ToggleButton, ToggleButtonGroup, Button, Form } from 'react-bootstrap';
 import { Button, Form, FormGroup, Label, Input, Alert } from 'reactstrap';
 import { useHistory } from 'react-router-dom';
@@ -38,15 +38,6 @@ function LoginPage() {
       setPassword(val);
     }
   }
-
-  // For debugging purposes
-  // useEffect(() => {
-  //   console.log(username)
-  // }, [username] );
-
-  // useEffect(() => {
-  //   console.log(password)
-  // }, [password] );
 
   return (
     <div className="FullPage"> 
