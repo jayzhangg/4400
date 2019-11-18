@@ -1,3 +1,18 @@
+.FullPage {
+    margin: 15vh auto;
+}
+
 .LoginPage {
+    text-align: center;
+}
+
+.Form {
+    width: 20vw;
+    border: 2px solid black;
+    padding: 50px;
+    margin: auto;
+}
+
+.LoginButton {
     text-align: center;
 }

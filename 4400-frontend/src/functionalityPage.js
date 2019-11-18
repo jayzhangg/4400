@@ -1,7 +1,7 @@
 import React from 'react';
 
 function FunctionalityPage() {
-  return <h2> This is the navigation page </h2>;
+  return <h2> This is the FunctionalityPage </h2>;
 }
 
 export default FunctionalityPage;
