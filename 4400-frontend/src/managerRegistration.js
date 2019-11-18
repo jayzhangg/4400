@@ -14,9 +14,13 @@ function ManagerRegistration() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [zipcode, setZipcode] = useState("");
+
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [stateDropdownOpen, setstateDropdownOpen] = useState(false);
-  const [companySelected, setComapanySelected] = useState("Choose Company");
+  const [companySelected, setCompanySelected] = useState("Choose Company");
   const [stateSelected, setStateSelected] = useState("Choose State");
 
   const [passwordShort, setPasswordShort] = useState(false);
@@ -43,7 +47,17 @@ function ManagerRegistration() {
 
     } else if (id === "inputConfirmPassword") {
       setConfirmPassword(val);
+
+    } else if (id === "inputAddress") {
+      setAddress(val);
+
+    } else if (id === "inputCity") {
+      setCity(val);
+
+    } else if (id === "zipcode") {
+      setZipcode(val);
     }
+
   }
 
   const goBack = () => {
@@ -67,7 +81,7 @@ function ManagerRegistration() {
   }
 
   const handleCompanyClick = (company) => {
-    setComapanySelected(company);
+    setCompanySelected(company);
   }
 
   const handleStateClick = (state) => {
