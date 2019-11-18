@@ -5,10 +5,14 @@ import {
   Switch,
   Route
 } from "react-router-dom";
+
+import './css/masterCss.css';
+
 import LoginPage from './loginPage';
 import FunctionalityPage from './functionalityPage';
 import RegistrationPage from './registrationPage';
 import temp from "./temp";
+import UserRegistraion from './userRegistration';
 
 function App() {
   return (
@@ -20,7 +24,7 @@ function App() {
           <Route path="/" exact component = { LoginPage } />
           <Route path="/functionalityPage" exact component = { FunctionalityPage } />
           <Route path="/registrationPage" exact component = { RegistrationPage } />
-          <Route path="/register/user" exact component = {temp} />
+          <Route path="/register/user" exact component = {UserRegistraion} />
           <Route path="/register/customer" exact component = {temp} />
           <Route path="/register/manager" exact component = {temp} />
           <Route path="/register/managerCustomer" exact component = {temp} />

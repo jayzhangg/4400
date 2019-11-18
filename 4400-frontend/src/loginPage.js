@@ -3,8 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { Button, Form, FormGroup, Label, Input, Alert } from 'reactstrap';
 import { useHistory } from 'react-router-dom';
 
-import './loginPage.css';
-
 function LoginPage() {
 
   const [username, setUsername] = useState("");

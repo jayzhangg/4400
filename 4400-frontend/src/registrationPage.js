@@ -2,8 +2,6 @@ import React from 'react';
 import { Button } from 'reactstrap';
 import { useHistory } from 'react-router-dom';
 
-import './registrationPage.css';
-
 function RegistrationPage() {
   let history = useHistory();
 
