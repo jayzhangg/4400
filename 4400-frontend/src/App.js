@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 
 import './css/masterCss.css';
+import 'react-table/react-table.css'
 
 import Temp from "./temp";
 
@@ -24,6 +25,8 @@ import UserRegistraion from './registrationPages/userRegistration';
 import CustomerRegistration from './registrationPages/customerRegistration';
 import ManagerRegistration from './registrationPages/managerRegistration';
 import ManagerCustomerRegistration from './registrationPages/managerCustomerRegistration';
+
+import ManageUser from './managePages/manageUser';
 
 function App() {
   return (
@@ -55,7 +58,7 @@ function App() {
           <Route path="/movie/schedule" exact component = { Temp } />
           <Route path="/movie/create" exact component = { Temp } />
 
-          <Route path="/manage/user" exact component = { Temp } />
+          <Route path="/manage/user" exact component = { ManageUser } />
           <Route path="/manage/company" exact component = { Temp } />
 
           <Route path="/history/visit" exact component = { Temp } />
