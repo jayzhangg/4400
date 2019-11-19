@@ -27,6 +27,7 @@ import ManagerRegistration from './registrationPages/managerRegistration';
 import ManagerCustomerRegistration from './registrationPages/managerCustomerRegistration';
 
 import ManageUser from './managePages/manageUser';
+import ManageCompany from './managePages/manageCompany';
 
 function App() {
   return (
@@ -59,10 +60,12 @@ function App() {
           <Route path="/movie/create" exact component = { Temp } />
 
           <Route path="/manage/user" exact component = { ManageUser } />
-          <Route path="/manage/company" exact component = { Temp } />
+          <Route path="/manage/company" exact component = { ManageCompany } />
 
           <Route path="/history/visit" exact component = { Temp } />
           <Route path="/history/view" exact component = { Temp } />
+
+          <Route path="/company/detail/" component = { UserFunctionalityPage } />
 
         </Switch>
 
