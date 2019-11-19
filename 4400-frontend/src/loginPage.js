@@ -17,8 +17,9 @@ function LoginPage() {
     setShowAlert(false);
 
     // If username is correct, navigate away, else display error
+    // Make sure to push to the correct / address based on what type of user the person loggin in is
     if (username === "" && password === "") {
-      history.push("/functionalityPage");
+      history.push("/functionality/user");
     } else {
       setShowAlert(true);
     }

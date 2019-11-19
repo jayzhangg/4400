@@ -8,8 +8,17 @@ import {
 
 import './css/masterCss.css';
 
+import Temp from "./temp";
+
 import LoginPage from './loginPage';
-import FunctionalityPage from './functionalityPages/functionalityPage';
+
+import UserFunctionalityPage from './functionalityPages/userFunctionalityPage';
+import CustomerFunctionalityPage from './functionalityPages/customerFunctionalityPage';
+import ManagerFunctionalityPage from './functionalityPages/managerFunctionalityPage';
+import ManagerCustomerFunctionalityPage from './functionalityPages/managerCustomerFunctionalityPage';
+import AdminFunctionalityPage from './functionalityPages/adminFunctionalityPage';
+import AdminCustomerFunctionalityPage from './functionalityPages/adminCustomerFunctionalityPage';
+
 import RegistrationPage from './registrationPages/registrationPage';
 import UserRegistraion from './registrationPages/userRegistration';
 import CustomerRegistration from './registrationPages/customerRegistration';
@@ -24,12 +33,34 @@ function App() {
             This is why we have to use exact otherwise, LoginPage will always get rendered since / preceeds everything*/}
         <Switch>
           <Route path="/" exact component = { LoginPage } />
-          <Route path="/functionalityPage" exact component = { FunctionalityPage } />
+
+          <Route path="/functionality/user" exact component = { UserFunctionalityPage } />
+          <Route path="/functionality/customer" exact component = { CustomerFunctionalityPage } />
+          <Route path="/functionality/manager" exact component = { ManagerFunctionalityPage } />
+          <Route path="/functionality/managerCustomer" exact component = { ManagerCustomerFunctionalityPage } />
+          <Route path="/functionality/admin" exact component = { AdminFunctionalityPage } />
+          <Route path="/functionality/adminCustomer" exact component = { AdminCustomerFunctionalityPage } />
+
           <Route path="/register" exact component = { RegistrationPage } />
           <Route path="/register/user" exact component = {UserRegistraion} />
           <Route path="/register/customer" exact component = {CustomerRegistration} />
           <Route path="/register/manager" exact component = {ManagerRegistration} />
           <Route path="/register/managerCustomer" exact component = {ManagerCustomerRegistration} />
+
+          <Route path="/theater/explore" exact component = { Temp } />
+          <Route path="/theater/overview" exact component = { Temp } />
+          <Route path="/theater/create" exact component = { Temp } />
+
+          <Route path="/movie/explore" exact component = { Temp } />
+          <Route path="/movie/schedule" exact component = { Temp } />
+          <Route path="/movie/create" exact component = { Temp } />
+
+          <Route path="/manage/user" exact component = { Temp } />
+          <Route path="/manage/company" exact component = { Temp } />
+
+          <Route path="/history/visit" exact component = { Temp } />
+          <Route path="/history/view" exact component = { Temp } />
+
         </Switch>
 
       </div>
