@@ -9,13 +9,12 @@ import {
 import './css/masterCss.css';
 
 import LoginPage from './loginPage';
-import FunctionalityPage from './functionalityPage';
-import RegistrationPage from './registrationPage';
-import temp from "./temp";
-import UserRegistraion from './userRegistration';
-import CustomerRegistration from './customerRegistration';
-import ManagerRegistration from './managerRegistration';
-import ManagerCustomerRegistration from './managerCustomerRegistration';
+import FunctionalityPage from './functionalityPages/functionalityPage';
+import RegistrationPage from './registrationPages/registrationPage';
+import UserRegistraion from './registrationPages/userRegistration';
+import CustomerRegistration from './registrationPages/customerRegistration';
+import ManagerRegistration from './registrationPages/managerRegistration';
+import ManagerCustomerRegistration from './registrationPages/managerCustomerRegistration';
 
 function App() {
   return (
