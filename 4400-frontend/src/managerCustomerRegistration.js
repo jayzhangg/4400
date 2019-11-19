@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Button, Form, FormGroup, Label, Input, Col, Row, Alert, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Col, Row, Alert, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, ListGroup, ListGroupItem } from 'reactstrap';
 import {useHistory} from 'react-router-dom';
 
-function ManagerRegistration() {
+function ManagerCustomerRegistration() {
   let history = useHistory();
 
   // Update this array with an read from the DB for all companies on first render
@@ -22,6 +22,8 @@ function ManagerRegistration() {
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [zipcode, setZipcode] = useState("");
+  const [creditCardNum, setCreditCardNum] = useState("");
+  const [creditCards, setCreditCards] = useState([]);
 
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [stateDropdownOpen, setstateDropdownOpen] = useState(false);
@@ -59,8 +61,12 @@ function ManagerRegistration() {
     } else if (id === "inputCity") {
       setCity(val);
 
-    } else if (id === "zipcode") {
+    } else if (id === "inputZipcode") {
       setZipcode(val);
+
+    } else if (id === "inputCreditCardNum") {
+      setCreditCardNum(val);
+      
     }
 
   }
@@ -84,6 +90,19 @@ function ManagerRegistration() {
     }
 
   }
+
+  const addCard = () => {
+    creditCards.push(creditCardNum);
+    setCreditCardNum("");
+    setCreditCards([...creditCards]);
+  };
+
+  const removeCard = (card) => {
+    var indexToRemove = creditCards.indexOf(card);
+    creditCards.splice(indexToRemove, 1);
+    setCreditCards([...creditCards]);
+  }
+
 
   const handleCompanyClick = (company) => {
     setCompanySelected(company);
@@ -109,10 +128,25 @@ function ManagerRegistration() {
     )
   });
 
+  const displayCreditCards = creditCards.map((card) => {
+    return (
+      <Row key={card.toString()}>
+        <Col md={8}>
+          <ListGroupItem> {card} </ListGroupItem>
+        </Col>
+        <Col>
+          <FormGroup>
+            <Button color="primary" onClick={() => removeCard(card) }>Remove</Button> {' '}
+          </FormGroup>
+        </Col>
+      </Row>
+    )
+  });
+
   return (
       <div className="FullPage"> 
         <div className="LoginPage">
-          <h2>Manager-Only Registration</h2>
+          <h2>Manager-Customer Registration</h2>
         </div>
         <div>
           <Form className="RegistrationForm">
@@ -238,6 +272,25 @@ function ManagerRegistration() {
               </Col>
             </Row>
 
+            <h5> Credit Card #s </h5>
+            <ListGroup>
+              {displayCreditCards}
+            </ListGroup>
+
+            <Row>
+              <Col md={8}>
+                <FormGroup>
+                  <Input value={creditCardNum} onChange={(e) => handleInput(e.target)} id="inputCreditCardNum" placeholder="Enter number" />
+                </FormGroup>
+              </Col>
+
+              <Col>
+                <FormGroup>
+                  <Button color="primary" onClick={ addCard }>Add</Button> {' '}
+                </FormGroup>
+              </Col>
+            </Row>
+
             <Alert isOpen={passwordShort} color="danger">
               Password must be at least 8 characters!
             </Alert>
@@ -257,4 +310,4 @@ function ManagerRegistration() {
   );
 }
 
-export default ManagerRegistration;
+export default ManagerCustomerRegistration;

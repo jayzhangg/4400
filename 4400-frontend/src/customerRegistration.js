@@ -131,14 +131,6 @@ function CustomerRegistration() {
               </Col>
             </Row>
 
-            <Alert isOpen={passwordShort} color="danger">
-              Password must be at least 8 characters!
-            </Alert>
-
-            <Alert isOpen={passwordMatch} color="danger">
-              Passwords did not match!
-            </Alert>
-
             <h5> Credit Card #s </h5>
             <ListGroup>
               {displayCreditCards}
@@ -157,6 +149,14 @@ function CustomerRegistration() {
                 </FormGroup>
               </Col>
             </Row>
+
+            <Alert isOpen={passwordShort} color="danger">
+              Password must be at least 8 characters!
+            </Alert>
+
+            <Alert isOpen={passwordMatch} color="danger">
+              Passwords did not match!
+            </Alert>
 
             <div className="LoginButton">
               <Button color="primary" onClick={ goBack }>Back</Button> {' '}
