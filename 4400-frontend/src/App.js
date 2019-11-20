@@ -33,6 +33,8 @@ import CreateTheater from './theaterPages/createTheater';
 
 import CompanyDetail from './companyPages/companyDetail';
 
+import CreateMovie from './moviePages/createMovie';
+
 function App() {
   return (
     <Router>
@@ -61,7 +63,7 @@ function App() {
 
           <Route path="/movie/explore" exact component = { Temp } />
           <Route path="/movie/schedule" exact component = { Temp } />
-          <Route path="/movie/create" exact component = { Temp } />
+          <Route path="/movie/create" exact component = { CreateMovie } />
 
           <Route path="/manage/user" exact component = { ManageUser } />
           <Route path="/manage/company" exact component = { ManageCompany } />
