@@ -7,8 +7,10 @@ import {
 } from "react-router-dom";
 
 import './css/masterCss.css';
-import 'react-table/react-table.css'
-
+import 'react-table/react-table.css';
+import 'react-dates/initialize';
+import 'react-dates/lib/css/_datepicker.css';
+ 
 import Temp from "./temp";
 
 import LoginPage from './loginPage';
@@ -30,6 +32,7 @@ import ManageUser from './managePages/manageUser';
 import ManageCompany from './managePages/manageCompany';
 
 import CreateTheater from './theaterPages/createTheater';
+import OverviewTheater from './theaterPages/overviewTheater';
 
 import CompanyDetail from './companyPages/companyDetail';
 
@@ -58,7 +61,7 @@ function App() {
           <Route path="/register/managerCustomer" exact component = {ManagerCustomerRegistration} />
 
           <Route path="/theater/explore" exact component = { Temp } />
-          <Route path="/theater/overview" exact component = { Temp } />
+          <Route path="/theater/overview" exact component = { OverviewTheater } />
           <Route path="/theater/create" exact component = { CreateTheater } />
 
           <Route path="/movie/explore" exact component = { Temp } />
