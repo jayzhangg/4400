@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import { Button, Form, FormGroup, Label, Input, Col, Row, Alert, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import {useHistory} from 'react-router-dom';
 
-function ManagerRegistration() {
+function CreateTheater() {
   let history = useHistory();
 
   // Update this array with an read from the DB for all companies on first render
   var companies = [1,2,3,4,5,6,7,8,9];
+
+  // Update this array with an read from the DB for all managers on first render
+  var managers = ["J", "A"];
+
   var states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL",
    "GA", "HI", "ID", "IL", "IN", "IA", "KS",
     "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT",
@@ -15,24 +19,21 @@ function ManagerRegistration() {
        "WA", "WV", "WI", "WY"];
 
   const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [zipcode, setZipcode] = useState("");
+  const [capacity, setCapacity] = useState("");
 
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [stateDropdownOpen, setstateDropdownOpen] = useState(false);
+  const [managerDropdownOpen, setManagerDropdownOpen] = useState(false);
+  const [managerSelected, setManagerSelected] = useState("Choose Manager");
   const [companySelected, setCompanySelected] = useState("Choose Company");
   const [stateSelected, setStateSelected] = useState("Choose State");
 
-  const [passwordShort, setPasswordShort] = useState(false);
-  const [passwordMatch, setPasswordMatch] = useState(false);
-
   const companyToggle = () => setCompanyDropdownOpen(prevState => !prevState);
   const stateToggle = () => setstateDropdownOpen(prevState => !prevState);
+  const managerToggle = () => setManagerDropdownOpen(prevState => !prevState);
 
   const handleInput = (target) => {
     var id = target.id;
@@ -41,47 +42,27 @@ function ManagerRegistration() {
     if (id === "inputFirstName") {
       setFirstName(val);
 
-    } else if (id === "inputLastName") {
-      setLastName(val);
-
-    } else if (id === "inputUsername") {
-      setUsername(val);
-
-    }else if (id === "inputPassword") {
-      setPassword(val);
-
-    } else if (id === "inputConfirmPassword") {
-      setConfirmPassword(val);
-
     } else if (id === "inputAddress") {
       setAddress(val);
 
     } else if (id === "inputCity") {
       setCity(val);
 
-    } else if (id === "zipcode") {
+    } else if (id === "inputZipcode") {
       setZipcode(val);
-    }
 
+    } else if (id === "inputCapacity") {
+      setCapacity(val);
+    } 
   }
 
   const goBack = () => {
     history.push("/register");
   }
 
-  const register = () => {
-    // Add register logic 
-    setPasswordMatch(false);
-    setPasswordShort(false);
-
-    console.log("first Name", firstName, "last Name", lastName, "username", username, "password", password, "confirmPass", confirmPassword);
-
-    if (password.length < 7) {
-      setPasswordShort(true);
-    }
-    if (password !== confirmPassword) {
-      setPasswordMatch(true);
-    }
+  const create = () => {
+    // Add create logic 
+    console.log(firstName, companySelected, address, city, stateSelected, zipcode, capacity, managerSelected);
 
   }
 
@@ -91,6 +72,10 @@ function ManagerRegistration() {
 
   const handleStateClick = (state) => {
     setStateSelected(state);
+  }
+
+  const handleManagerClick = (manager) => {
+    setManagerSelected(manager);
   }
 
   const displayCompanies = companies.map((company) => {
@@ -109,10 +94,18 @@ function ManagerRegistration() {
     )
   });
 
+  const displayManagers = managers.map((manager) => {
+    return (
+      <DropdownItem key={manager} onClick={() => handleManagerClick(manager)}>
+        {manager}
+      </DropdownItem>
+    )
+  });
+
   return (
       <div className="FullPage"> 
         <div className="LoginPage">
-          <h2>Manager-Only Registration</h2>
+          <h2>Create Theater</h2>
         </div>
         <div>
           <Form className="RegistrationForm">
@@ -121,22 +114,6 @@ function ManagerRegistration() {
                 <FormGroup>
                   <Label for="inputFirstName"> First Name </Label>
                   <Input onChange={(e) => handleInput(e.target)} id="inputFirstName" placeholder="Enter username" />
-                </FormGroup>
-              </Col>
-
-              <Col>
-                <FormGroup>
-                  <Label for="inputLastName"> Last Name </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputLastName" placeholder="Enter password" />
-                </FormGroup>
-              </Col>
-            </Row>
-
-            <Row>
-              <Col md={6}>
-                <FormGroup>
-                  <Label for="inputUsername"> Username </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputUsername" placeholder="Enter username" />
                 </FormGroup>
               </Col>
 
@@ -171,24 +148,8 @@ function ManagerRegistration() {
               </Col>
             </Row>
 
-            <Row>
-              <Col md={6}>
-                <FormGroup>
-                  <Label for="inputPassword"> Password </Label>
-                  <Input type="password" onChange={(e) => handleInput(e.target)} id="inputPassword" placeholder="Enter password" />
-                </FormGroup>
-              </Col>
-
-              <Col md={6}>
-                <FormGroup>
-                  <Label for="inputConfirmPassword"> Confirm Password </Label>
-                  <Input type="password" onChange={(e) => handleInput(e.target)} id="inputConfirmPassword" placeholder="Enter password" />
-                </FormGroup>
-              </Col>
-            </Row>
-
             <FormGroup>
-              <Label for="inputAddress"> Address </Label>
+              <Label for="inputAddress"> Street Address </Label>
               <Input onChange={(e) => handleInput(e.target)} id="inputAddress" placeholder="Enter address" />
             </FormGroup>
 
@@ -238,17 +199,48 @@ function ManagerRegistration() {
               </Col>
             </Row>
 
-            <Alert isOpen={passwordShort} color="danger">
-              Password must be at least 8 characters!
-            </Alert>
+            <Row>
+              <Col md={6}>
+                <FormGroup>
+                  <Label for="inputCapacity"> Capacity </Label>
+                  <Input onChange={(e) => handleInput(e.target)} id="inputCapacity" placeholder="Enter capacity" />
+                </FormGroup>
+              </Col>
 
-            <Alert isOpen={passwordMatch} color="danger">
-              Passwords did not match!
-            </Alert>
+              <Col>
+                <FormGroup>
+                  <Label> Manager </Label>
+                  <Dropdown isOpen={managerDropdownOpen} toggle={managerToggle}>
+                    <DropdownToggle caret>
+                      {managerSelected}
+                    </DropdownToggle>
+                      <DropdownMenu modifiers={{
+                                      setMaxHeight: {
+                                        enabled: true,
+                                        order: 890,
+                                        fn: (data) => {
+                                          return {
+                                            ...data,
+                                            styles: {
+                                              ...data.styles,
+                                              overflow: 'auto',
+                                              maxHeight: 110,
+                                            },
+                                          };
+                                        },
+                                      },
+                                    }}>
+                        <DropdownItem header>Managers</DropdownItem>
+                          {displayManagers}
+                      </DropdownMenu>
+                  </Dropdown>
+                </FormGroup>
+              </Col>
+            </Row>
 
             <div className="LoginButton">
               <Button color="primary" onClick={ goBack }>Back</Button> {' '}
-              <Button color="primary" onClick={ register }>Register</Button>
+              <Button color="primary" onClick={ create }>Create</Button>
             </div>
 
           </Form>
@@ -257,4 +249,4 @@ function ManagerRegistration() {
   );
 }
 
-export default ManagerRegistration;
+export default CreateTheater;

@@ -29,6 +29,8 @@ import ManagerCustomerRegistration from './registrationPages/managerCustomerRegi
 import ManageUser from './managePages/manageUser';
 import ManageCompany from './managePages/manageCompany';
 
+import CreateTheater from './theaterPages/createTheater';
+
 function App() {
   return (
     <Router>
@@ -53,7 +55,7 @@ function App() {
 
           <Route path="/theater/explore" exact component = { Temp } />
           <Route path="/theater/overview" exact component = { Temp } />
-          <Route path="/theater/create" exact component = { Temp } />
+          <Route path="/theater/create" exact component = { CreateTheater } />
 
           <Route path="/movie/explore" exact component = { Temp } />
           <Route path="/movie/schedule" exact component = { Temp } />

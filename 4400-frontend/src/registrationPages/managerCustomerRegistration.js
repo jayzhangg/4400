@@ -222,7 +222,7 @@ function ManagerCustomerRegistration() {
             </Row>
 
             <FormGroup>
-              <Label for="inputAddress"> Enter Address </Label>
+              <Label for="inputAddress"> Address </Label>
               <Input onChange={(e) => handleInput(e.target)} id="inputAddress" placeholder="Enter address" />
             </FormGroup>
 
