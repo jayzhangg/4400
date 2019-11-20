@@ -1,5 +1,5 @@
-CREATE SCHEMA `AtlantaMovie` ;
-USE  `AtlantaMovie` ;
+CREATE SCHEMA `AtlantaMovie`;
+USE  `AtlantaMovie`;
 
 /* Table Structure for User */ 
 CREATE TABLE `user` (
@@ -9,14 +9,14 @@ CREATE TABLE `user` (
   `user_firstname` varchar(45) DEFAULT NULL,
   `user_lastname` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`user_name`)
-) 
+);
 
 /* Table Structure for Customer */
 CREATE TABLE `customer` (
   `customer_name` varchar(45) NOT NULL,
   PRIMARY KEY (`customer_name`),
   CONSTRAINT `customer_name` FOREIGN KEY (`customer_name`) REFERENCES `user` (`user_name`)
-) 
+);
 
 /* Table Structure for CreditCard */
 CREATE TABLE `creditcard` (
@@ -25,20 +25,20 @@ CREATE TABLE `creditcard` (
   PRIMARY KEY (`creditcard_num`),
   KEY `creditcard_owner_idx` (`creditcard_owner`),
   CONSTRAINT `creditcard_owner` FOREIGN KEY (`creditcard_owner`) REFERENCES `customer` (`customer_name`)
-)
+);
 
 /* Table Structure for Admin */
 CREATE TABLE `admin` (
   `admin_name` varchar(45) NOT NULL,
   PRIMARY KEY (`admin_name`),
   CONSTRAINT `admin_name` FOREIGN KEY (`admin_name`) REFERENCES `user` (`user_name`)
-)
+);
 
 /* Table Structure for Company */
 CREATE TABLE `company` (
   `companyName` varchar(45) NOT NULL,
   PRIMARY KEY (`companyName`)
-) 
+);
 
 /* Table Structure for Manager */
 CREATE TABLE `manager` (
@@ -52,9 +52,10 @@ CREATE TABLE `manager` (
   'VI', 'VT', 'WA', 'WI', 'WV', 'WY') DEFAULT 'WA',
   `manager_works_in` varchar(45) NOT NULL,
   PRIMARY KEY (`manager_name`),
+  UNIQUE KEY `manager_address_UNIQUE` (`manager_street`,`manager_city`,`manager_zipcode`,`manager_state`),
   CONSTRAINT `manager_name` FOREIGN KEY (`manager_name`) REFERENCES `user` (`user_name`),
   CONSTRAINT `manager_works_in` FOREIGN KEY (`manager_works_in`) REFERENCES `company` (`companyName`)
-) 
+);
 
 /* Table Structure for Theater */
 CREATE TABLE `theater` (
@@ -70,12 +71,11 @@ CREATE TABLE `theater` (
   `theater_capacity` int DEFAULT NULL,
   `theater_managed_by` varchar(45) NOT NULL,
   PRIMARY KEY (`theater_owned_by`,`theater_name`),
-  UNIQUE KEY `theater_owned_by_UNIQUE` (`theater_owned_by`),
-  UNIQUE KEY `theater_name_UNIQUE` (`theater_name`),
+  UNIQUE KEY `theater_name_owned_by_UNIQUE` (`theater_name`,`theater_owned_by`),
   KEY `theater_managed_by_idx` (`theater_managed_by`),
   CONSTRAINT `theater_managed_by` FOREIGN KEY (`theater_managed_by`) REFERENCES `manager` (`manager_name`),
   CONSTRAINT `theater_owned_by` FOREIGN KEY (`theater_owned_by`) REFERENCES `company` (`companyName`)
-)
+);
 
 /* Table Structure for Movie */
 CREATE TABLE `movie` (
@@ -83,9 +83,9 @@ CREATE TABLE `movie` (
   `movie_release_date` date NOT NULL,
   `movie_duration` int DEFAULT NULL,
   PRIMARY KEY (`movie_name`,`movie_release_date`),
-  UNIQUE KEY `movie_name_UNIQUE` (`movie_name`),
-  UNIQUE KEY `movie_release_date_UNIQUE` (`movie_release_date`)
-) 
+  UNIQUE KEY `movie_name_release_date_UNIQUE` (`movie_name`,`movie_release_date`),
+  KEY `movie_release_date_idx` (`movie_release_date`)
+); 
 
 /* Table Structure for MoviePlay */
 CREATE TABLE `movieplay` (
@@ -95,11 +95,7 @@ CREATE TABLE `movieplay` (
   `play_date` date NOT NULL,
   `play_owning_company_name` varchar(45) NOT NULL,
   PRIMARY KEY (`play_theater_name`,`play_movie_name`,`play_release_date`,`play_date`,`play_owning_company_name`),
-  UNIQUE KEY `play_theater_name_UNIQUE` (`play_theater_name`),
-  UNIQUE KEY `play_movie_name_UNIQUE` (`play_movie_name`),
-  UNIQUE KEY `play_release_date_UNIQUE` (`play_release_date`),
-  UNIQUE KEY `play_date_UNIQUE` (`play_date`),
-  UNIQUE KEY `play_owning_company_name_UNIQUE` (`play_owning_company_name`),
+  UNIQUE KEY `play_tn_mn_rd_pd_ocn_UNIQUE` (`play_theater_name`,`play_movie_name`,`play_release_date`,`play_date`,`play_owning_company_name`),
   KEY `play_movie_name_idx` (`play_movie_name`),
   KEY `play_release_date_idx` (`play_release_date`),
   KEY `play_theater_name_idx` (`play_theater_name`,`play_owning_company_name`),
@@ -108,7 +104,7 @@ CREATE TABLE `movieplay` (
   CONSTRAINT `play_owning_company_name` FOREIGN KEY (`play_owning_company_name`) REFERENCES `theater` (`theater_owned_by`),
   CONSTRAINT `play_release_date` FOREIGN KEY (`play_release_date`) REFERENCES `movie` (`movie_release_date`),
   CONSTRAINT `play_theater_name` FOREIGN KEY (`play_movie_name`) REFERENCES `theater` (`theater_name`)
-) 
+);
 
 /* Table Structure for CreditCardUsage */
 CREATE TABLE `creditcardUsage` (
@@ -130,7 +126,7 @@ CREATE TABLE `creditcardUsage` (
   CONSTRAINT `used_play_date` FOREIGN KEY (`used_play_date`) REFERENCES `movieplay` (`play_release_date`),
   CONSTRAINT `used_release_date` FOREIGN KEY (`used_release_date`) REFERENCES `movieplay` (`play_release_date`),
   CONSTRAINT `used_theater_name` FOREIGN KEY (`used_theater_name`) REFERENCES `movieplay` (`play_theater_name`)
-) 
+); 
 
 /* Table Structure for VisitHistory */
 CREATE TABLE `visit` (
@@ -146,4 +142,4 @@ CREATE TABLE `visit` (
   CONSTRAINT `visit_company` FOREIGN KEY (`visit_company`) REFERENCES `theater` (`theater_owned_by`),
   CONSTRAINT `visit_theater` FOREIGN KEY (`visit_theater`) REFERENCES `theater` (`theater_name`),
   CONSTRAINT `visit_username` FOREIGN KEY (`visit_username`) REFERENCES `user` (`user_name`)
-)
+);
