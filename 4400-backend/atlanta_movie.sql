@@ -71,8 +71,7 @@ CREATE TABLE `theater` (
   `theater_capacity` int DEFAULT NULL,
   `theater_managed_by` varchar(45) NOT NULL,
   PRIMARY KEY (`theater_owned_by`,`theater_name`),
-  UNIQUE KEY `theater_owned_by_UNIQUE` (`theater_owned_by`),
-  UNIQUE KEY `theater_name_UNIQUE` (`theater_name`),
+  UNIQUE KEY `theater_name_owned_by_UNIQUE` (`theater_name`,`theater_owned_by`),
   KEY `theater_managed_by_idx` (`theater_managed_by`),
   CONSTRAINT `theater_managed_by` FOREIGN KEY (`theater_managed_by`) REFERENCES `manager` (`manager_name`),
   CONSTRAINT `theater_owned_by` FOREIGN KEY (`theater_owned_by`) REFERENCES `company` (`companyName`)
@@ -84,8 +83,7 @@ CREATE TABLE `movie` (
   `movie_release_date` date NOT NULL,
   `movie_duration` int DEFAULT NULL,
   PRIMARY KEY (`movie_name`,`movie_release_date`),
-  UNIQUE KEY `movie_name_UNIQUE` (`movie_name`),
-  UNIQUE KEY `movie_release_date_UNIQUE` (`movie_release_date`)
+  UNIQUE KEY `movie_name_release_date_UNIQUE` (`movie_name`,`movie_release_date`)
 ) 
 
 /* Table Structure for MoviePlay */
@@ -96,11 +94,7 @@ CREATE TABLE `movieplay` (
   `play_date` date NOT NULL,
   `play_owning_company_name` varchar(45) NOT NULL,
   PRIMARY KEY (`play_theater_name`,`play_movie_name`,`play_release_date`,`play_date`,`play_owning_company_name`),
-  UNIQUE KEY `play_theater_name_UNIQUE` (`play_theater_name`),
-  UNIQUE KEY `play_movie_name_UNIQUE` (`play_movie_name`),
-  UNIQUE KEY `play_release_date_UNIQUE` (`play_release_date`),
-  UNIQUE KEY `play_date_UNIQUE` (`play_date`),
-  UNIQUE KEY `play_owning_company_name_UNIQUE` (`play_owning_company_name`),
+  UNIQUE KEY `play_tn_mn_rd_pd_ocn_UNIQUE` (`play_theater_name`,`play_movie_name`,`play_release_date`,`play_date`,`play_owning_company_name`),
   KEY `play_movie_name_idx` (`play_movie_name`),
   KEY `play_release_date_idx` (`play_release_date`),
   KEY `play_theater_name_idx` (`play_theater_name`,`play_owning_company_name`),
