@@ -31,6 +31,8 @@ import ManageCompany from './managePages/manageCompany';
 
 import CreateTheater from './theaterPages/createTheater';
 
+import CompanyDetail from './companyPages/companyDetail';
+
 function App() {
   return (
     <Router>
@@ -67,7 +69,7 @@ function App() {
           <Route path="/history/visit" exact component = { Temp } />
           <Route path="/history/view" exact component = { Temp } />
 
-          <Route path="/company/detail/" component = { UserFunctionalityPage } />
+          <Route path="/company/detail/" component = { CompanyDetail } />
 
         </Switch>
 
