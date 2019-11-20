@@ -52,6 +52,7 @@ CREATE TABLE `manager` (
   'VI', 'VT', 'WA', 'WI', 'WV', 'WY') DEFAULT 'WA',
   `manager_works_in` varchar(45) NOT NULL,
   PRIMARY KEY (`manager_name`),
+  UNIQUE KEY `manager_address_UNIQUE` (`manager_street`,`manager_city`,`manager_zipcode`,`manager_state`),
   CONSTRAINT `manager_name` FOREIGN KEY (`manager_name`) REFERENCES `user` (`user_name`),
   CONSTRAINT `manager_works_in` FOREIGN KEY (`manager_works_in`) REFERENCES `company` (`companyName`)
 ) 
