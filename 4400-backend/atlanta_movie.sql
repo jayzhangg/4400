@@ -83,7 +83,8 @@ CREATE TABLE `movie` (
   `movie_release_date` date NOT NULL,
   `movie_duration` int DEFAULT NULL,
   PRIMARY KEY (`movie_name`,`movie_release_date`),
-  UNIQUE KEY `movie_name_release_date_UNIQUE` (`movie_name`,`movie_release_date`)
+  UNIQUE KEY `movie_name_release_date_UNIQUE` (`movie_name`,`movie_release_date`),
+  KEY `movie_release_date_idx` (`movie_release_date`)
 ); 
 
 /* Table Structure for MoviePlay */
