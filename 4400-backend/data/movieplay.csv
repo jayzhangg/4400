@@ -1,0 +1,23 @@
+play_theater_name,play_movie_name,play_release_date,play_date,play_owning_company_name
+ABC Theater,4400 The Movie,2019-08-12,2019-10-12,Awesome Theater Company
+ABC Theater,The First Pokemon Movie,1998-07-19,2018-07-19,Awesome Theater Company
+ABC Theater,Georgia Tech The Movie,1985-08-13,1985-08-13,Awesome Theater Company
+Cinema Star,How to Train Your Dragon,2010-03-21,2010-04-02,4400 Theater Company
+Cinema Star,4400 The Movie,2019-08-12,2019-09-12,4400 Theater Company
+Cinema Star,The King's Speech,2010-11-26,2019-12-20,4400 Theater Company
+Cinema Star,Spaceballs,1987-06-24,2000-02-02,4400 Theater Company
+Cinema Star,Georgia Tech The Movie,1985-08-13,2019-09-30,4400 Theater Company
+Cinema Star,George P Burdell's Life Story,1927-08-12,2010-05-20,4400 Theater Company
+Main Movies,How to Train Your Dragon,2010-03-21,2010-03-22,EZ Theater Company
+Main Movies,How to Train Your Dragon,2010-03-21,2010-03-23,EZ Theater Company
+Main Movies,Spaceballs,1987-06-24,1999-06-24,EZ Theater Company
+Main Movies,George P Burdell's Life Story,1927-08-12,2019-10-22,EZ Theater Company
+Main Movies,George P Burdell's Life Story,1927-08-12,2019-07-14,EZ Theater Company
+Main Movies,The King's Speech,2010-11-26,2019-12-20,EZ Theater Company
+ML Movies,Spaceballs,1987-06-24,2010-04-02,AI Theater Company
+ML Movies,Spaceballs,1987-06-24,2023-01-23,AI Theater Company
+ML Movies,Calculus Returns: A ML Story,2019-09-19,2019-10-10,AI Theater Company
+ML Movies,Calculus Returns: A ML Story,2019-09-19,2019-12-30,AI Theater Company
+ML Movies,Spider-Man: Into the Spider-Verse,2018-12-01,2019-09-30,AI Theater Company
+Star Movies,How to Train Your Dragon,2010-03-21,2010-03-25,EZ Theater Company
+Star Movies,4400 The Movie,2019-08-12,2019-08-12,EZ Theater Company

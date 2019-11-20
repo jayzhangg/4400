@@ -1,0 +1,31 @@
+user_name,user_status,user_password,user_firstname,user_lastname
+georgep,Approved,111111111,George P.,Burdell
+calcwizard,Approved,222222222,Issac,Newton
+calcultron,Approved,333333333,Dwight,Schrute
+calcultron2,Approved,444444444,Jim,Halpert
+gdanger,Declined,555555555,Gary,Danger
+imbatman,Approved,666666666,Bruce,Wayne
+imready,Approved,777777777,Spongebob,Squarepants
+isthisthekrustykrab,Approved,888888888,Patrick,Star
+clarinetbeast,Declined,999999999,Squidward,Tentacles
+texasStarKarate,Declined,111111110,Sandy,Cheeks
+fullMetal,Approved,111111100,Edward,Elric
+notFullMetal,Approved,111111100,Alphonse,Elric
+ilikemoney$$,Approved,111111110,Eugene,Krabs
+eeqmcsquare,Approved,111111110,Albert,Einstein
+theScienceGuy,Approved,999999999,Bill,Nye
+entropyRox,Approved,999999999,Claude,Shannon
+fatherAI,Approved,222222222,Alan,Turing
+cool_class4400,Approved,333333333,A. TA,Washere
+thePiGuy3.14,Approved,1111111111,Archimedes,Syracuse
+does2Much,Approved,1212121212,Carl,Gauss
+programerAAL,Approved,3131313131,Ada,Lovelace
+radioactivePoRa,Approved,1313131313,Marie,Curie
+DNAhelix,Approved,777777777,Rosalind,Franklin
+ghcghc,Approved,666666666,Grace,Hopper
+RitzLover28,Approved,444444444,Abby,Normal
+smith_j,Pending,333333333,John,Smith
+manager1,Approved,1122112211,Manager,One
+manager2,Approved,3131313131,Manager,Two
+manager3,Approved,8787878787,Three,Three
+manager4,Approved,5755555555,Four,Four
