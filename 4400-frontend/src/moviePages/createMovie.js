@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Form, FormGroup, Label, Input, Col, Row } from 'reactstrap';
 import {useHistory} from 'react-router-dom';
-import 'react-dates/initialize';
-import 'react-dates/lib/css/_datepicker.css';
-
 import moment from 'moment';
 
 import { SingleDatePicker } from 'react-dates';
