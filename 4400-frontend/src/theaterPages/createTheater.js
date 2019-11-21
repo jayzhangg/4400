@@ -214,25 +214,25 @@ function CreateTheater() {
                     <DropdownToggle caret>
                       {managerSelected}
                     </DropdownToggle>
-                      <DropdownMenu modifiers={{
-                                      setMaxHeight: {
-                                        enabled: true,
-                                        order: 890,
-                                        fn: (data) => {
-                                          return {
-                                            ...data,
-                                            styles: {
-                                              ...data.styles,
-                                              overflow: 'auto',
-                                              maxHeight: 110,
-                                            },
-                                          };
-                                        },
+                    <DropdownMenu modifiers={{
+                                    setMaxHeight: {
+                                      enabled: true,
+                                      order: 890,
+                                      fn: (data) => {
+                                        return {
+                                          ...data,
+                                          styles: {
+                                            ...data.styles,
+                                            overflow: 'auto',
+                                            maxHeight: 110,
+                                          },
+                                        };
                                       },
-                                    }}>
-                        <DropdownItem header>Managers</DropdownItem>
-                          {displayManagers}
-                      </DropdownMenu>
+                                    },
+                                  }}>
+                      <DropdownItem header>Managers</DropdownItem>
+                        {displayManagers}
+                    </DropdownMenu>
                   </Dropdown>
                 </FormGroup>
               </Col>
