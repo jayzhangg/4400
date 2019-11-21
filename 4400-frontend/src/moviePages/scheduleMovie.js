@@ -10,8 +10,8 @@ function ScheduleMovie() {
 
   var movies = ["J", "A", "Y", "Z"];
 
-  const [movieDropdownOpen, setMovieDropdownOpen] = useState(false);
   const [movieSelected, setMovieSelected] = useState("Choose Movie");
+  const [movieDropdownOpen, setMovieDropdownOpen] = useState(false);
 
   const [releaseDate, setReleaseDate] = useState(moment.momentObj);
   const [releaseDateFocused, setReleaseDateFocused] = useState(false);

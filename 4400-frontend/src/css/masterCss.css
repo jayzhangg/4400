@@ -20,6 +20,13 @@
     margin: auto;
 }
 
+.MovieExploreForm {
+    width: 60vw;
+    border: 2px solid black;
+    padding: 50px;
+    margin: auto;
+}
+
 .LoginButton {
     text-align: center;
 }
