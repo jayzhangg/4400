@@ -72,6 +72,7 @@ CREATE TABLE `theater` (
   `theater_managed_by` varchar(45) NOT NULL,
   PRIMARY KEY (`theater_owned_by`,`theater_name`),
   UNIQUE KEY `theater_name_owned_by_UNIQUE` (`theater_name`,`theater_owned_by`),
+  KEY `theater_name_idx` (`theater_name`),
   KEY `theater_managed_by_idx` (`theater_managed_by`),
   CONSTRAINT `theater_managed_by` FOREIGN KEY (`theater_managed_by`) REFERENCES `manager` (`manager_name`),
   CONSTRAINT `theater_owned_by` FOREIGN KEY (`theater_owned_by`) REFERENCES `company` (`companyName`)
@@ -103,7 +104,7 @@ CREATE TABLE `movieplay` (
   CONSTRAINT `play_movie_name` FOREIGN KEY (`play_movie_name`) REFERENCES `movie` (`movie_name`),
   CONSTRAINT `play_owning_company_name` FOREIGN KEY (`play_owning_company_name`) REFERENCES `theater` (`theater_owned_by`),
   CONSTRAINT `play_release_date` FOREIGN KEY (`play_release_date`) REFERENCES `movie` (`movie_release_date`),
-  CONSTRAINT `play_theater_name` FOREIGN KEY (`play_movie_name`) REFERENCES `theater` (`theater_name`)
+  CONSTRAINT `play_theater_name` FOREIGN KEY (`play_theater_name`) REFERENCES `theater` (`theater_name`)
 );
 
 /* Table Structure for CreditCardUsage */
