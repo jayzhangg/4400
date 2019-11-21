@@ -97,6 +97,7 @@ CREATE TABLE `movieplay` (
   `play_owning_company_name` varchar(45) NOT NULL,
   PRIMARY KEY (`play_theater_name`,`play_movie_name`,`play_release_date`,`play_date`,`play_owning_company_name`),
   UNIQUE KEY `play_tn_mn_rd_pd_ocn_UNIQUE` (`play_theater_name`,`play_movie_name`,`play_release_date`,`play_date`,`play_owning_company_name`),
+  KEY  `play_date_idx` (`play_date`),
   KEY `play_movie_name_idx` (`play_movie_name`),
   KEY `play_release_date_idx` (`play_release_date`),
   KEY `play_theater_name_idx` (`play_theater_name`,`play_owning_company_name`),
@@ -124,7 +125,7 @@ CREATE TABLE `creditcardUsage` (
   CONSTRAINT `used_creditcard_num` FOREIGN KEY (`used_creditcard_num`) REFERENCES `creditcard` (`creditcard_num`),
   CONSTRAINT `used_movie_name` FOREIGN KEY (`used_movie_name`) REFERENCES `movieplay` (`play_movie_name`),
   CONSTRAINT `used_owning_company_name` FOREIGN KEY (`used_owning_company_name`) REFERENCES `movieplay` (`play_owning_company_name`),
-  CONSTRAINT `used_play_date` FOREIGN KEY (`used_play_date`) REFERENCES `movieplay` (`play_release_date`),
+  CONSTRAINT `used_play_date` FOREIGN KEY (`used_play_date`) REFERENCES `movieplay` (`play_date`),
   CONSTRAINT `used_release_date` FOREIGN KEY (`used_release_date`) REFERENCES `movieplay` (`play_release_date`),
   CONSTRAINT `used_theater_name` FOREIGN KEY (`used_theater_name`) REFERENCES `movieplay` (`play_theater_name`)
 ); 
