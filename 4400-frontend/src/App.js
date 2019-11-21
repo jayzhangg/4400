@@ -40,6 +40,8 @@ import CreateMovie from './moviePages/createMovie';
 import ScheduleMovie from './moviePages/scheduleMovie';
 import ExploreMovie from './moviePages/exploreMovie';
 
+import ViewHistory from './historyPages/viewHistory';
+
 function App() {
   return (
     <Router>
@@ -74,7 +76,7 @@ function App() {
           <Route path="/manage/company" exact component = { ManageCompany } />
 
           <Route path="/history/visit" exact component = { Temp } />
-          <Route path="/history/view" exact component = { Temp } />
+          <Route path="/history/view" exact component = { ViewHistory } />
 
           <Route path="/company/detail/" component = { CompanyDetail } />
 
