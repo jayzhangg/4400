@@ -33,6 +33,7 @@ import ManageCompany from './managePages/manageCompany';
 
 import CreateTheater from './theaterPages/createTheater';
 import OverviewTheater from './theaterPages/overviewTheater';
+import ExploreTheater from './theaterPages/exploreTheater';
 
 import CompanyDetail from './companyPages/companyDetail';
 
@@ -64,7 +65,7 @@ function App() {
           <Route path="/register/manager" exact component = {ManagerRegistration} />
           <Route path="/register/managerCustomer" exact component = {ManagerCustomerRegistration} />
 
-          <Route path="/theater/explore" exact component = { Temp } />
+          <Route path="/theater/explore" exact component = { ExploreTheater } />
           <Route path="/theater/overview" exact component = { OverviewTheater } />
           <Route path="/theater/create" exact component = { CreateTheater } />
 

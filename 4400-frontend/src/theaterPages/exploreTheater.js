@@ -7,23 +7,19 @@ import moment from 'moment';
 
 import { SingleDatePicker } from 'react-dates';
 
-function ExploreMovie() {
+function ExploreTheater() {
   let history = useHistory();
 
   const columns = [
     {
-      Header: "Movie",
-      accessor: 'movie',
+      Header: "Theater",
+      accessor: 'theater',
       Cell: props => (
         <div>
-          <input checked={selected === props.index.toString()} id={props.index} onChange={(e) => handleCheckboxClick(e)} type="radio"></input> {props.row.movie} 
+          <input checked={selected === props.index.toString()} id={props.index} onChange={(e) => handleCheckboxClick(e)} type="radio"></input> {props.row.theater} 
         </div>
       )
-    }, 
-    {
-      Header: "Theater",
-      accessor: "theater"
-    }, 
+    },
     {
       Header: "Address",
       accessor: "address"
@@ -31,14 +27,10 @@ function ExploreMovie() {
     {
       Header: "Company",
       accessor: "company"
-    },
-    {
-      Header: "Play Date",
-      accessor: "playDate"
     }
 ]
 
-  var movies = ["J", "A", "Y", "Z"];
+  var theaters = ["J", "A", "Y", "Z"];
   var companies = ["J", "AA"];
   var states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL",
    "GA", "HI", "ID", "IL", "IN", "IA", "KS",
@@ -46,49 +38,39 @@ function ExploreMovie() {
      "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK",
       "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA",
        "WA", "WV", "WI", "WY"];
-  var cards = ["abcdfegs", "bcdafsas"];
   
   const [city, setCity] = useState("");
 
-  const [movieDropdownOpen, setMovieDropdownOpen] = useState(false);
+  const [theaterDropdownOpen, setTheaterDropdownOpen] = useState(false);
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [stateDropdownOpen, setStateDropdownOpen] = useState(false);
-  const [cardDropdownOpen, setCardDropdownOpen] = useState(false);
 
   const [companySelected, setCompanySelected] = useState("Choose Company");
   const [stateSelected, setStateSelected] = useState("Choose State");
-  const [movieSelected, setMovieSelected] = useState("Choose Movie");
-  const [cardSelected, setCardSelected] = useState("Choose Card");
+  const [theaterSelected, setTheaterSelected] = useState("Choose Theater");
 
   const [data, setData] = useState([]);
   const [selected, setSelected] = useState("");
 
-  const [moviePlayDateFrom, setMoviePlayDateFrom] = useState(moment.momentObj);
-  const [moviePlayDateFromFocused, setMoviePlayDateFromFocused] = useState(false);
-  const [moviePlayDateTo, setMoviePlayDateTo] = useState(moment.momentObj);
-  const [moviePlayDateToFocused, setMoviePlayDateToFocused] = useState(false);
+  const [movieVisitDate, setMovieVisitDate] = useState(moment.momentObj);
+  const [movieVisitDateFocused, setMovieVisitDateFocused] = useState(false);
 
   const companyToggle = () => setCompanyDropdownOpen(prevState => !prevState);
   const stateToggle = () => setStateDropdownOpen(prevState => !prevState);
-  const movieToggle = () => setMovieDropdownOpen(prevState => !prevState);
-  const cardToggle = () => setCardDropdownOpen(prevState => !prevState);
+  const theaterToggle = () => setTheaterDropdownOpen(prevState => !prevState);
 
   useEffect(() => {
     // Get initial Data via API call
     const initialData = [
       {
-        movie: "J",
         theater: "fooooasd",
         address: "ABC ST AAAAAAA",
-        company: "AA",
-        playDate: "11/19/2019"
+        company: "AA"
       }, 
       {
-        movie: "JADFSA",
         theater: "asfasgasd",
         address: "ABC ST BBBB",
-        company: "J",
-        playDate: "11/29/2019"
+        company: "J"
       }
     ]
     setData(initialData);
@@ -99,31 +81,26 @@ function ExploreMovie() {
   }
 
   const filter = () => {
-    console.log(movieSelected, companySelected, city, stateSelected, moviePlayDateFrom, moviePlayDateTo);
+    console.log(theaterSelected, companySelected, city, stateSelected, movieVisitDate);
     // Do a DB read with the given constraints and repopulate the data, its way too hard to filter through all the data in the way this app is structured and using react table 
     const newData = [
       {
-        movie: "bbbb",
         theater: "ADFA",
         address: "ADS BB AAAAAAA",
-        company: "J",
-        playDate: "9/5/2019"
+        company: "J"
       }, 
       {
-        movie: "AAF",
         theater: "bfsdf",
         address: "tha ST BBBB",
-        company: "AA",
-        playDate: "4/20/2019"
+        company: "AA"
       }
     ]
     setData(newData);
   }
 
-  const view = () => {
-    var movie = data[parseInt(selected)];
-    console.log(movie);
-
+  const logVisit = () => {
+    console.log(selected);
+    console.log(data[parseInt(selected)]);
   }
 
   const handleInput = (target) => {
@@ -148,18 +125,14 @@ function ExploreMovie() {
     setStateSelected(state);
   }
 
-  const handleMovieClick = (movie) => {
-    setMovieSelected(movie);
+  const handleTheaterClick = (theater) => {
+    setTheaterSelected(theater);
   }
 
-  const handleCardClick = (card) => {
-    setCardSelected(card);
-  }
-
-  const displayMovies = movies.map((movie) => {
+  const displayTheater = theaters.map((theater) => {
     return (
-      <DropdownItem key={movie} onClick={() => handleMovieClick(movie)}>
-        {movie}
+      <DropdownItem key={theater} onClick={() => handleTheaterClick(theater)}>
+        {theater}
       </DropdownItem>
     )
   });
@@ -180,28 +153,20 @@ function ExploreMovie() {
     )
   });
 
-  const displayCards = cards.map((card) => {
-    return (
-      <DropdownItem key={card} onClick={() => handleCardClick(card)}>
-        {card}
-      </DropdownItem>
-    )
-  });
-
   return (
       <div className="FullPage"> 
         <div className="LoginPage">
-          <h2>Explore Movie</h2>
+          <h2>Explore Theater</h2>
         </div>
         <div>
-          <Form className="MovieExploreForm">
+          <Form className="RegistrationForm">
             <Row>
               <Col>
                 <FormGroup>
-                <Label> Movie Name </Label>
-                  <Dropdown isOpen={movieDropdownOpen} toggle={movieToggle}>
+                <Label> Theater Name </Label>
+                  <Dropdown isOpen={theaterDropdownOpen} toggle={theaterToggle}>
                     <DropdownToggle caret>
-                      {movieSelected}
+                      {theaterSelected}
                     </DropdownToggle>
                     <DropdownMenu modifiers={{
                                     setMaxHeight: {
@@ -219,8 +184,8 @@ function ExploreMovie() {
                                       },
                                     },
                                   }}>
-                        <DropdownItem header>Movies</DropdownItem>
-                          {displayMovies}
+                        <DropdownItem header>Theaters</DropdownItem>
+                          {displayTheater}
                     </DropdownMenu>
                   </Dropdown>
                 </FormGroup>
@@ -296,39 +261,6 @@ function ExploreMovie() {
               </Col>
             </Row>
 
-            <Row>
-              <Col md={3}>
-                <FormGroup>
-                  <Label> Movie Play Date </Label>                
-                </FormGroup>
-              </Col>
-              <Col md={9}>
-                <FormGroup>
-                <SingleDatePicker
-                          date={moviePlayDateFrom}
-                          onDateChange={(date) => setMoviePlayDateFrom(date)}
-                          focused={moviePlayDateFromFocused}
-                          onFocusChange={({focused}) => setMoviePlayDateFromFocused(focused)}
-                          id="2"
-                          numberOfMonths={1}
-                          showDefaultInputIcon
-                          inputIconPosition="after"  
-                        />
-                        {" -- "}      
-                        <SingleDatePicker
-                          date={moviePlayDateTo}
-                          onDateChange={(date) => setMoviePlayDateTo(date)}
-                          focused={moviePlayDateToFocused}
-                          onFocusChange={({focused}) => setMoviePlayDateToFocused(focused)}
-                          id="3"
-                          numberOfMonths={1}
-                          showDefaultInputIcon
-                          inputIconPosition="after"  
-                        />           
-                </FormGroup>
-              </Col>
-            </Row>
-
             <FormGroup style={{textAlign:'center'}}>
               <Button color="primary" onClick={ filter }>Filter</Button> {' '}
             </FormGroup>
@@ -342,45 +274,36 @@ function ExploreMovie() {
             </FormGroup>
 
             <Row>
-              <Col md={4} style={{marginTop: '30px'}}>
+              <Col md={2}>
                 <FormGroup>
-                  <Button color="primary" onClick={ goBack }>Back</Button> {' '}
-                </FormGroup>
-              </Col>
-              
-              <Col>
-                <FormGroup>
-                <Label> Card Number </Label>
-                  <Dropdown isOpen={cardDropdownOpen} toggle={cardToggle}>
-                    <DropdownToggle caret>
-                      {cardSelected}
-                    </DropdownToggle>
-                    <DropdownMenu modifiers={{
-                                    setMaxHeight: {
-                                      enabled: true,
-                                      order: 890,
-                                      fn: (data) => {
-                                        return {
-                                          ...data,
-                                          styles: {
-                                            ...data.styles,
-                                            overflow: 'auto',
-                                            maxHeight: 110,
-                                          },
-                                        };
-                                      },
-                                    },
-                                  }}>
-                        <DropdownItem header>Cards</DropdownItem>
-                          {displayCards}
-                    </DropdownMenu>
-                  </Dropdown>
+                <Button color="primary" onClick={ goBack }>Back</Button> {' '}
                 </FormGroup>
               </Col>
 
-              <Col md={4} style={{marginTop: '30px'}}>
+              <Col md={2} style={{paddingRight: "0px"}}>
                 <FormGroup>
-                  <Button color="primary" onClick={ view }>View</Button> {' '}
+                  <Label> Visit Date </Label>                
+                </FormGroup>
+              </Col>
+
+              <Col md={5} style={{paddingLeft: "0px"}}> 
+                <FormGroup>
+                  <SingleDatePicker
+                    date={movieVisitDate}
+                    onDateChange={(date) => setMovieVisitDate(date)}
+                    focused={movieVisitDateFocused}
+                    onFocusChange={({focused}) => setMovieVisitDateFocused(focused)}
+                    id="0"
+                    numberOfMonths={1}
+                    showDefaultInputIcon
+                    inputIconPosition="after"  
+                  />           
+                </FormGroup>
+              </Col>
+
+              <Col md={3}>
+                <FormGroup>
+                <Button color="primary" onClick={ logVisit }>Log Visit</Button> {' '}
                 </FormGroup>
               </Col>
 
@@ -392,4 +315,4 @@ function ExploreMovie() {
   );
 }
 
-export default ExploreMovie;
+export default ExploreTheater;
