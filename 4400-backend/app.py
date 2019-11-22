@@ -9,6 +9,11 @@ password = 'dinodb'
 database = 'AtlantaMovie'
 conn = pymysql.connect(host=hostname, user=username, passwd=password, db=database)
 
+
+@app.route('/', methods=['GET'])
+def index():
+    return 'Hello'
+
 @app.route('/login/<username>/<password>', methods=['GET'])
 def validate_login(username, password):
     cur = conn.cursor()
