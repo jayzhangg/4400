@@ -9,11 +9,6 @@ password = 'dinodb'
 database = 'AtlantaMovie'
 conn = pymysql.connect(host=hostname, user=username, passwd=password, db=database)
 
-
-@app.route('/', methods=['GET'])
-def index():
-    return 'Hello'
-
 @app.route('/login/<username>/<password>', methods=['GET'])
 def validate_login(username, password):
     cur = conn.cursor()
@@ -33,7 +28,7 @@ def register_user(fname, lname, username, password, password2):
     cur.execute(query, (username))
     if (cur.rowcount > 0):
         content = {'success': 'false', 'error_msg': 'username alredy exists in database'}
-        return content, status.HTTP_200_OK
+        return content, status.HTTP_400_BAD_REQUEST
     if (len(password) < 8):
         content = {'success': 'false', 'error_msg': 'password must have at least 8 characters'}
         return content, status.HTTP_400_BAD_REQUEST
