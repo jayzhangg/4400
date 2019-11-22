@@ -74,7 +74,7 @@ function ManagerRegistration() {
     setPasswordMatch(false);
     setPasswordShort(false);
 
-    console.log("first Name", firstName, "last Name", lastName, "username", username, "password", password, "confirmPass", confirmPassword);
+    console.log(firstName, lastName, username, password, confirmPassword, address, city, stateSelected, zipcode);
 
     if (password.length < 7) {
       setPasswordShort(true);

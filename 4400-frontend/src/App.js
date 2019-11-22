@@ -11,8 +11,6 @@ import 'react-table/react-table.css';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
  
-import Temp from "./temp";
-
 import LoginPage from './loginPage';
 
 import UserFunctionalityPage from './functionalityPages/userFunctionalityPage';
@@ -81,7 +79,6 @@ function App() {
           <Route path="/history/view" exact component = { ViewHistory } />
 
           <Route path="/company/detail/" component = { CompanyDetail } />
-
         </Switch>
 
       </div>

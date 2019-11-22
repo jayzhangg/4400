@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Form, FormGroup, Label, Input, Col, Row, Alert, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Col, Row, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import {useHistory} from 'react-router-dom';
 
 function CreateTheater() {
