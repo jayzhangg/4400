@@ -39,7 +39,7 @@ def client():
 #     assert data == {'success': 'false', 'error_msg': 'password and confirm password should match'}
 #     assert res.status_code == 400
 
-#     # password does not match confirm password
+#     # valid
 #     res = client.get('/register/george/p/georgepp/12345678/12345678')
 #     data = json.loads(res.data.decode('utf-8'))
 #     assert data == {'success': 'true', 'msg': ''}
