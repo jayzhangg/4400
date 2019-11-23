@@ -26,7 +26,7 @@ def validate_login(username, password):
         content = {'success': 'false', 'error_msg': 'invalid credentials'}
         return content, status.HTTP_401_UNAUTHORIZED
 
-@app.route('/register/<fname>/<lname>/<username>/<password>/<password2>', methods=['GET'])
+@app.route('/register/user/<fname>/<lname>/<username>/<password>/<password2>', methods=['GET'])
 def register_user(fname, lname, username, password, password2):
     cur = g.conn.cursor()
     query = "SELECT * FROM user where user_name=%s"

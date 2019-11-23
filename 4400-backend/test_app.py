@@ -22,25 +22,25 @@ def client():
 
 # def test_register_user(client):
 #     # username exists
-#     res = client.get('/register/george/p/georgep/12345678/12345678')
+#     res = client.get('/register/user/george/p/georgep/12345678/12345678')
 #     data = json.loads(res.data.decode('utf-8'))
 #     assert data == {'success': 'false', 'error_msg': 'username alredy exists in database'}
 #     assert res.status_code == 400
 
 #     # password not 8 chars
-#     res = client.get('/register/george/p/georgepp/1234567/1234567')
+#     res = client.get('/register/user/george/p/georgepp/1234567/1234567')
 #     data = json.loads(res.data.decode('utf-8'))
 #     assert data == {'success': 'false', 'error_msg': 'password must have at least 8 characters'}
 #     assert res.status_code == 400
 
 #     # password does not match confirm password
-#     res = client.get('/register/george/p/georgepp/12345678/1234567')
+#     res = client.get('/register/user/george/p/georgepp/12345678/1234567')
 #     data = json.loads(res.data.decode('utf-8'))
 #     assert data == {'success': 'false', 'error_msg': 'password and confirm password should match'}
 #     assert res.status_code == 400
 
-#     # valid
-#     res = client.get('/register/george/p/georgepp/12345678/12345678')
-#     data = json.loads(res.data.decode('utf-8'))
-#     assert data == {'success': 'true', 'msg': ''}
-#     assert res.status_code == 200
+    # # valid
+    # res = client.get('/register/user/george/p/georgepp/12345678/12345678')
+    # data = json.loads(res.data.decode('utf-8'))
+    # assert data == {'success': 'true', 'msg': ''}
+    # assert res.status_code == 200
