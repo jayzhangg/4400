@@ -4,7 +4,7 @@ from flask_api import status
 
 app = Flask(__name__)
 SUCCESS_MSG = {'success': 'true', 'msg': ''}
-FAIL_MSG = {'success': 'false', 'error_msg': ''}
+FAIL_MSG = {'success': 'false', 'err_msg': ''}
 
 def execute_query(query, params):
     cur = g.conn.cursor()
@@ -25,7 +25,7 @@ def before_request():
 def validate_login(username, password):
     count = execute_query("SELECT * FROM user where user_name=%s and user_password=%s", (username, password))
     if (count <= 0):
-        FAIL_MSG['error_msg'] = 'invalid credentials'
+        FAIL_MSG['err_msg'] = 'invalid credentials'
         return FAIL_MSG, status.HTTP_401_UNAUTHORIZED
     return SUCCESS_MSG, status.HTTP_200_OK
 
@@ -33,13 +33,13 @@ def validate_login(username, password):
 def register_user(fname, lname, username, password, password2):
     count = execute_query("SELECT * FROM user where user_name=%s", (username))
     if (count > 0):
-        FAIL_MSG['error_msg'] = 'username alredy exists in database'
+        FAIL_MSG['err_msg'] = 'username alredy exists in database'
         return FAIL_MSG, status.HTTP_400_BAD_REQUEST
     if (len(password) < 8):
-        FAIL_MSG['error_msg'] = 'password must have at least 8 characters'
+        FAIL_MSG['err_msg'] = 'password must have at least 8 characters'
         return FAIL_MSG, status.HTTP_400_BAD_REQUEST
     if (password != password2):
-        FAIL_MSG['error_msg'] = 'password and confirm password should match'
+        FAIL_MSG['err_msg'] = 'password and confirm password should match'
         return FAIL_MSG, status.HTTP_400_BAD_REQUEST
     count = execute_query("INSERT INTO user VALUES (%s,'PENDING',%s,%s,%s)", (username, password, fname, lname))
     if (count <= 0):
@@ -47,69 +47,53 @@ def register_user(fname, lname, username, password, password2):
         return FAIL_MSG, status.HTTP_400_BAD_REQUEST
     return SUCCESS_MSG, status.HTTP_200_OK
 
-# @app.route('/register/customer/<fname>/<lname>/<username>/<password>/<password2>/<c1>', methods=['GET'])
-# @app.route('/register/customer/<fname>/<lname>/<username>/<password>/<password2>/<c1>/<c2>', methods=['GET'])
-# @app.route('/register/customer/<fname>/<lname>/<username>/<password>/<password2>/<c1>/<c2>/<c3>', methods=['GET'])
-# @app.route('/register/customer/<fname>/<lname>/<username>/<password>/<password2>/<c1>/<c2>/<c3>/<c4>', methods=['GET'])
-# @app.route('/register/customer/<fname>/<lname>/<username>/<password>/<password2>/<c1>/<c2>/<c3>/<c4>/<c5>', methods=['GET'])
-# def register_customer(fname, lname, username, password, password2, c1, c2=None, c3=None, c4=None, c5=None): 
-#     content, status = add_creditcard(c1, username)
-#     if (content != {'success': 'true', 'msg': ''}):
-#         return content, status
-#     if (c2 is not None):
-#         content, status = add_creditcard(c2, username)
-#         if (content != {'success': 'true', 'msg': ''}):
-#             return content, status
-#     if (c3 is not None):
-#         content, status = add_creditcard(c3, username)
-#         if (content != {'success': 'true', 'msg': ''}):
-#             return content, status
-#     if (c4 is not None):
-#         content, status = add_creditcard(c4, username)
-#         if (content != {'success': 'true', 'msg': ''}):
-#             return content, status
-#     if (c5 is not None):
-#         content, status = add_creditcard(c5, username)
-#         if (content != {'success': 'true', 'msg': ''}):
-#             return content, status
-#     content, status = register_user(fname, lname, username, password, password2)
-#     if (content != {'success': 'true', 'msg': ''}):
-#         return content, status
-#     cur = g.conn.cursor()
-#     query = "INSERT INTO customer VALUES (%s)"
-#     cur.execute(query, (username))
-#     cur.close()
-#     count = cur.rowcount
-#     if (count <= 0):
-#         content = {'success': 'false', 'error_msg': 'could not add customer to database'}
-#         return content, status.HTTP_400_BAD_REQUEST
-#     g.conn.commit()
-#     content = {'success': 'true', 'msg': ''}
-#     return content, status.HTTP_200_OK
+@app.route('/register/customer/<fname>/<lname>/<username>/<password>/<password2>/<c1>', methods=['GET'])
+@app.route('/register/customer/<fname>/<lname>/<username>/<password>/<password2>/<c1>/<c2>', methods=['GET'])
+@app.route('/register/customer/<fname>/<lname>/<username>/<password>/<password2>/<c1>/<c2>/<c3>', methods=['GET'])
+@app.route('/register/customer/<fname>/<lname>/<username>/<password>/<password2>/<c1>/<c2>/<c3>/<c4>', methods=['GET'])
+@app.route('/register/customer/<fname>/<lname>/<username>/<password>/<password2>/<c1>/<c2>/<c3>/<c4>/<c5>', methods=['GET'])
+def register_customer(fname, lname, username, password, password2, c1, c2=None, c3=None, c4=None, c5=None): 
+    msg, code = register_user(fname, lname, username, password, password2)
+    if (msg != SUCCESS_MSG):
+        return msg, code
+    count = execute_query("INSERT INTO customer VALUES (%s)", (username))
+    if (count <= 0):
+        FAIL_MSG['err_msg'] = 'could not add customer to database'
+        return FAIL_MSG, status.HTTP_400_BAD_REQUEST
+    msg, code = add_creditcard(c1, username)
+    if (msg != SUCCESS_MSG):
+        return msg, code
+    if (c2 is not None):
+        msg, code = add_creditcard(c2, username)
+        if (msg != SUCCESS_MSG):
+            return msg, code
+    if (c3 is not None):
+        msg, code = add_creditcard(c3, username)
+        if (msg != SUCCESS_MSG):
+            return msg, code
+    if (c4 is not None):
+        msg, code = add_creditcard(c4, username)
+        if (msg != SUCCESS_MSG):
+            return msg, code
+    if (c5 is not None):
+        msg, code = add_creditcard(c5, username)
+        if (msg != SUCCESS_MSG):
+            return msg, code
+    return SUCCESS_MSG, status.HTTP_200_OK
 
-# def add_creditcard(cc_num, cc_owner):
-#     if (len(cc_num) != 16):
-#         content = {'success': 'false', 'error_msg': 'creditcard must have 16 digits'}
-#         return content, status.HTTP_400_BAD_REQUEST
-#     cur = g.conn.cursor()
-#     query = "SELECT * FROM creditcard where creditcard_num=%s"
-#     cur.execute(query, (cc_num))
-#     count = cur.rowcount
-#     cur.close()
-#     if (count > 0):
-#         content = {'success': 'false', 'error_msg': 'credit card num alredy exists in database'}
-#         return content, status.HTTP_400_BAD_REQUEST
-#     cur = g.conn.cursor()
-#     query = "INSERT INTO creditcard VALUES (%s, %s)"
-#     cur.execute(query, (cc_num, cc_owner))
-#     count = cur.rowcount
-#     cur.close()
-#     if (count > 0):
-#         content = {'success': 'true', 'msg': ''}
-#         return content, status.HTTP_200_OK
-#     else:
-#         content = {'success': 'false', 'error_msg': 'could not add credit card num to database'}
-#         return content, status.HTTP_400_BAD_REQUEST
+def add_creditcard(cc_num, cc_owner):
+    if (len(cc_num) != 16):
+        FAIL_MSG['err_msg'] = 'creditcard must have 16 digits'
+        return FAIL_MSG, status.HTTP_400_BAD_REQUEST
+    count = execute_query("SELECT * FROM creditcard where creditcard_num=%s", (cc_num))
+    if (count > 0):
+        FAIL_MSG['err_msg'] = 'credit card num alredy exists in database'
+        return FAIL_MSG, status.HTTP_400_BAD_REQUEST
+    count = execute_query("INSERT INTO creditcard VALUES (%s, %s)", (cc_num, cc_owner))
+    if (count <= 0):
+        FAIL_MSG['err_msg'] = 'could not add credit card num to database'
+        return FAIL_MSG, status.HTTP_400_BAD_REQUEST
+    return SUCCESS_MSG, status.HTTP_200_OK
 
 @app.after_request
 def after_request(response):
