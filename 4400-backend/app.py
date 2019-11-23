@@ -13,6 +13,13 @@ def execute_query(query, params):
     cur.close()
     return count
 
+def get_results(query, params):
+    cur = g.conn.cursor()
+    cur.execute(query, params)
+    res = cur.fetchall()
+    cur.close()
+    return res
+
 @app.before_request
 def before_request():
     hostname = '104.155.149.149'
@@ -93,6 +100,30 @@ def add_creditcard(cc_num, cc_owner):
     if (count <= 0):
         FAIL_MSG['err_msg'] = 'could not add credit card num to database'
         return FAIL_MSG, status.HTTP_400_BAD_REQUEST
+    return SUCCESS_MSG, status.HTTP_200_OK
+
+@app.route('/register/manager/<fname>/<lname>/<username>/<password>/<password2>/<company>/<street>/<city>/<state>/<zipcode>', methods=['GET'])
+def register_manager(fname, lname, username, password, password2, company, street, city, state, zipcode):
+    msg, code = register_user(fname, lname, username, password, password2)
+    if (msg != SUCCESS_MSG):
+        return msg, code
+    count = execute_query("SELECT * FROM manager where manager_street=%s and manager_city=%s and manager_zipcode=%s and manager_state=%s", (street, city, zipcode, state))
+    if (count > 0):
+        FAIL_MSG['err_msg'] = 'manager address alredy exists in database'
+        return FAIL_MSG, status.HTTP_400_BAD_REQUEST
+    if (len(zipcode) != 5):
+        FAIL_MSG['err_msg'] = 'zipcode must have 5 digits'
+        return FAIL_MSG, status.HTTP_400_BAD_REQUEST
+    count = execute_query("INSERT INTO manager VALUES(%s, %s, %s, %s, %s, %s)", (username, street, city, zipcode, state, company))
+    if (count <= 0):
+        FAIL_MSG['err_msg'] = 'could not add manager to database'
+        return FAIL_MSG, status.HTTP_400_BAD_REQUEST
+    return SUCCESS_MSG, status.HTTP_200_OK
+
+@app.route('/companies', methods=['GET'])
+def get_companies():
+    res = get_results("SELECT * FROM company", ())
+    SUCCESS_MSG['msg'] = res
     return SUCCESS_MSG, status.HTTP_200_OK
 
 @app.after_request
