@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Form, FormGroup, Label, Input, Col, Row, Alert } from 'reactstrap';
 import {useHistory} from 'react-router-dom';
+import axios from 'axios';
 
 function UserRegistration() {
   let history = useHistory();
@@ -43,7 +44,7 @@ function UserRegistration() {
     setPasswordMatch(false);
     setPasswordShort(false);
 
-    console.log("first Name", firstName, "last Name", lastName, "username", username, "password", password, "confirmPass", confirmPassword);
+    console.log(firstName, lastName, username, password, confirmPassword);
 
     if (password.length < 7) {
       setPasswordShort(true);
@@ -52,6 +53,13 @@ function UserRegistration() {
       setPasswordMatch(true);
     }
 
+    axios.get(`https://cs4400-api.herokuapp.com/register/user/${firstName}/${lastName}/${username}/${password}/${confirmPassword}`)
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   }
 
   return (
