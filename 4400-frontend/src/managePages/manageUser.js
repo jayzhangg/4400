@@ -1,24 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import ReactTable from 'react-table';
-import { Button, Form, FormGroup, Label, Input, Col, Row, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Col, Row, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Alert } from 'reactstrap';
 import {useHistory} from 'react-router-dom';
+import axios from 'axios';
 
 function ManageUser() {
   let history = useHistory();
-
-  // Get initial Data via API call
-  const initialData = [{
-      username: "J",
-      creditCardCount: "0",
-      userType: "User",
-      status: "Pending"
-    }, 
-    {
-      username: "AA",
-      creditCardCount: "1",
-      userType: "User",
-      status: "Pending"
-  }]
 
   const columns = [{
     Header: "Username",
@@ -40,7 +27,7 @@ function ManageUser() {
   }]
 
   // Update this array with an read from the DB for all companies on first render
-  var statuses = ["ALL", "Pending", "Declined", "Approved"];
+  var statuses = ["ALL", "PENDING", "DECLINED", "APPROVED"];
   var selected = [];
 
   const [username, setUsername] = useState("");
@@ -49,8 +36,29 @@ function ManageUser() {
   const [statusSelected, setStatusSelected] = useState("Choose Status");
   const [data, setData] = useState([]);
 
+  const [statusNotSelected, setStatusNotSelected] = useState(false);
+
   useEffect(() => {
-    setData(initialData);
+    axios.get(`https://cs4400-api.herokuapp.com/admin/filter_user/ALL/user_name/DES`)
+      .then((response) => {
+        // console.log(response.data.users);
+
+        var initialData = [];
+        var userList = response.data.users;
+
+        for (var i=0; i < userList.length; i++) {
+          var temp = {}
+          temp.username = userList[i][0];
+          temp.creditCardCount = userList[i][1];
+          temp.userType = userList[i][2];
+          temp.status = userList[i][3];
+          initialData.push(temp);
+        }
+        setData(initialData);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
   }, [])
 
   const statusToggle = () => setStatusDropdownOpen(prevState => !prevState);
@@ -82,63 +90,98 @@ function ManageUser() {
   }
 
   const approve = () => {
-    var newData = []
     if (selected.length > 0) {
-      for (var i= 0; i< data.length; i++) {
-        var newObj = {};
-        newObj.username = data[i].username;
-        newObj.creditCardCount = data[i].creditCardCount;
-        newObj.userType = data[i].userType;
-        newObj.status = data[i].status;
-
-        if (selected.includes(i.toString())) {
-          newObj.status = "Approved";
-        }
-        newData.push(newObj);
+      for (var i= 0; i<selected.length; i++) {
+        var username = data[selected[i]].username;
+        axios.get(`https://cs4400-api.herokuapp.com/admin/approve/${username}`)
+          .then((response) => {
+            var newData = []
+            if (selected.length > 0) {
+              for (var i= 0; i< data.length; i++) {
+                var newObj = {};
+                newObj.username = data[i].username;
+                newObj.creditCardCount = data[i].creditCardCount;
+                newObj.userType = data[i].userType;
+                newObj.status = data[i].status;
+        
+                if (selected.includes(i.toString())) {
+                  newObj.status = "APPROVED";
+                }
+                newData.push(newObj);
+              }
+              setData(newData);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+        });
       }
-
-      setData(newData);
     }
   }
 
   const decline = () => {
-    var newData = []
     if (selected.length > 0) {
-      for (var i= 0; i< data.length; i++) {
-        var newObj = {};
-        newObj.username = data[i].username;
-        newObj.creditCardCount = data[i].creditCardCount;
-        newObj.userType = data[i].userType;
-        newObj.status = data[i].status;
-
-        if (selected.includes(i.toString())) {
-          newObj.status = "Declined";
-        }
-        newData.push(newObj);
+      for (var i= 0; i<selected.length; i++) {
+        var username = data[selected[i]].username;
+        axios.get(`https://cs4400-api.herokuapp.com/admin/decline/${username}`)
+          .then((response) => {
+            var newData = []
+            if (selected.length > 0) {
+              for (var i= 0; i< data.length; i++) {
+                var newObj = {};
+                newObj.username = data[i].username;
+                newObj.creditCardCount = data[i].creditCardCount;
+                newObj.userType = data[i].userType;
+                newObj.status = data[i].status;
+        
+                if (selected.includes(i.toString())) {
+                  newObj.status = "DECLINED";
+                }
+                newData.push(newObj);
+              }
+              setData(newData);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+        });
       }
-
-      setData(newData);
     }
   }
 
   const filter = () => {
-    console.log(username, statusSelected);
+    // console.log(username, statusSelected);
+    setStatusNotSelected(false);
+    var url = `https://cs4400-api.herokuapp.com/admin/filter_user/${statusSelected}/user_name/DES`;
 
-    // Do a DB read with the given constraints and repopulate the data, its way too hard to filter through all the data in the way this app is structured and using react table 
-    var newData = [{
-      username: "Jasdasd",
-      creditCardCount: "0",
-      userType: "User",
-      status: "Pending"
-    }, 
-    {
-      username: "AAfsafs",
-      creditCardCount: "2",
-      userType: "Ah",
-      status: "Pending"
-  }];
-  setData(newData);
+    if (username !== "") {
+      url += `/${username}`;
+    }
 
+    if (statusSelected === "Choose Status") {
+      setStatusNotSelected(true);
+
+    } else {
+      axios.get(url)
+        .then((response) => {
+          // console.log(response);
+          var newData = [];
+          var userList = response.data.users;
+
+          for (var i=0; i < userList.length; i++) {
+            var temp = {}
+            temp.username = userList[i][0];
+            temp.creditCardCount = userList[i][1];
+            temp.userType = userList[i][2];
+            temp.status = userList[i][3];
+            newData.push(temp);
+          }
+          setData(newData);
+        })
+        .catch((err) => {
+          console.log(err);
+      });
+    }
   }
 
   const handleStatusClick = (status) => {
@@ -223,9 +266,13 @@ function ManageUser() {
               <ReactTable
                     data={data}
                     columns={columns}
-                    minRows={5}
+                    defaultPageSize={5}
                     />
             </FormGroup>
+
+            <Alert isOpen={statusNotSelected} color="danger">
+              You must choose a status value to fitler on!
+            </Alert>
 
             <div className="LoginButton">
               <Button color="primary" onClick={ goBack }>Back</Button> {' '}
