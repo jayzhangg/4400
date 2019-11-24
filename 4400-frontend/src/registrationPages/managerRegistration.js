@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Form, FormGroup, Label, Input, Col, Row, Alert, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import {useHistory} from 'react-router-dom';
+import axios from 'axios';
 
 function ManagerRegistration() {
   let history = useHistory();
 
-  // Update this array with an read from the DB for all companies on first render
-  var companies = [1,2,3,4,5,6,7,8,9];
   var states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL",
    "GA", "HI", "ID", "IL", "IN", "IA", "KS",
     "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT",
@@ -23,6 +22,7 @@ function ManagerRegistration() {
   const [city, setCity] = useState("");
   const [zipcode, setZipcode] = useState("");
 
+  const [companies, setCompanies] = useState([]);
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [stateDropdownOpen, setstateDropdownOpen] = useState(false);
   const [companySelected, setCompanySelected] = useState("Choose Company");
@@ -33,6 +33,20 @@ function ManagerRegistration() {
 
   const companyToggle = () => setCompanyDropdownOpen(prevState => !prevState);
   const stateToggle = () => setstateDropdownOpen(prevState => !prevState);
+
+  useEffect(() => {
+    // Update this array with an read from the DB for all companies on first render
+    var companies = [1,2,3,4,5,6,7,8,9];
+
+    axios.get(`https://cs4400-api.herokuapp.com/companies`)
+      .then((response) => {
+        companies = response.data.companies;
+        setCompanies(companies);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
+  }, [])
 
   const handleInput = (target) => {
     var id = target.id;
@@ -59,7 +73,7 @@ function ManagerRegistration() {
     } else if (id === "inputCity") {
       setCity(val);
 
-    } else if (id === "zipcode") {
+    } else if (id === "inputZipcode") {
       setZipcode(val);
     }
 
@@ -74,7 +88,7 @@ function ManagerRegistration() {
     setPasswordMatch(false);
     setPasswordShort(false);
 
-    console.log(firstName, lastName, username, password, confirmPassword, address, city, stateSelected, zipcode);
+    console.log(firstName, lastName, username, password, confirmPassword, companySelected, address, city, stateSelected, zipcode);
 
     if (password.length < 7) {
       setPasswordShort(true);
@@ -82,6 +96,14 @@ function ManagerRegistration() {
     if (password !== confirmPassword) {
       setPasswordMatch(true);
     }
+
+    axios.get(`https://cs4400-api.herokuapp.com/register/manager/${firstName}/${lastName}/${username}/${password}/${confirmPassword}/${companySelected}/${address}/${city}/${stateSelected}/${zipcode}`)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
 
   }
 
