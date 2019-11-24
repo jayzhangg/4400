@@ -13,20 +13,37 @@ function LoginPage() {
   let history = useHistory();
 
   const validateLogin = () => {
-    // Make an API call to check if username and pass are valid, then use setValid(true/false) to change state
-    console.log("username:", username, "password:", password);
+    // console.log("username:", username, "password:", password);
     setShowAlert(false);
 
     // If username is correct, navigate away, else display error
     // Make sure to push to the correct / address based on what type of user the person logged in is
+    axios.get(`https://cs4400-api.herokuapp.com/login/${username}/${password}`)
+    .then((response) => {
+      // console.log(response);
+      var data = response.data;
+      var userType = "";
+      var statePayload = {username: username, userType: userType};
 
-    // sample GET that works to backend
-    axios.get("https://cors-anywhere.herokuapp.com/https://cs4400-api.herokuapp.com/login/georgep/111111111")
-    .then(function (response) {
-      console.log(response);
+      if (data.isAdmin && data.isCustomer) {
+        userType = "adminCustomer";
+      } else if (data.isAdmin) {
+        userType = "admin";
+      } else if (data.isManager && data.isCustomer) {
+        userType = "managerCustomer";
+      } else if (data.isManager) {
+        userType = "manager";
+      } else if (data.isCustomer) {
+        userType = "customer";
+      } else {
+        userType = "user";
+      }
+
+      // console.log(userType);
+      history.push(`/functionality/${userType}`, statePayload);
     })
-    .catch(function (err) {
-      console.log(err);
+    .catch((err) => {
+      setShowAlert(true);
     })
   }
 
