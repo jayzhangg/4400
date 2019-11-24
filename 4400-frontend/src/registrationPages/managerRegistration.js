@@ -40,7 +40,7 @@ function ManagerRegistration() {
 
   useEffect(() => {
     // Update this array with an read from the DB for all companies on first render
-    var companies = [1,2,3,4,5,6,7,8,9];
+    var companies = [];
 
     axios.get(`https://cs4400-api.herokuapp.com/companies`)
       .then((response) => {
@@ -112,14 +112,14 @@ function ManagerRegistration() {
       setBadZipCode(true);
 
     } else {
-      axios.get(`https://cs4400-api.herokuapp.com/register/manager/${username}/${companySelected.toString()}/${address}/${city}/${stateSelected}/${zipcode}/${firstName}/${lastName}/${password}/${confirmPassword}`)
-      .then((response) => {
-        setRegisterSuccess(true);
-      })
-      .catch((err) => {
-        setRegisterFail(true);
-    });
-  }
+        axios.get(`https://cs4400-api.herokuapp.com/register/manager/${username}/${companySelected.toString()}/${address}/${city}/${stateSelected}/${zipcode}/${firstName}/${lastName}/${password}/${confirmPassword}`)
+        .then((response) => {
+          setRegisterSuccess(true);
+        })
+        .catch((err) => {
+          setRegisterFail(true);
+      });
+    }
   }
 
   const handleCompanyClick = (company) => {

@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Form, FormGroup, Label, Input, Col, Row, Alert, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, ListGroup, ListGroupItem } from 'reactstrap';
 import {useHistory} from 'react-router-dom';
+import axios from 'axios';
 
 function ManagerCustomerRegistration() {
   let history = useHistory();
 
-  // Update this array with an read from the DB for all companies on first render
-  var companies = [1,2,3,4,5,6,7,8,9];
   var states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL",
    "GA", "HI", "ID", "IL", "IN", "IA", "KS",
     "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT",
@@ -25,16 +24,37 @@ function ManagerCustomerRegistration() {
   const [creditCardNum, setCreditCardNum] = useState("");
   const [creditCards, setCreditCards] = useState([]);
 
+  const [companies, setCompanies] = useState([]);
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [stateDropdownOpen, setstateDropdownOpen] = useState(false);
   const [companySelected, setCompanySelected] = useState("Choose Company");
   const [stateSelected, setStateSelected] = useState("Choose State");
 
+  const [registerSuccess, setRegisterSuccess] = useState(false);
+  const [registerFail, setRegisterFail] = useState(false);
+  const [allFieldsPresent, setAllFieldsPresent] = useState(false);
+  const [badZipCode, setBadZipCode] = useState(false);
+  const [invalidCreditCardNums, setInvalidCreditCardNums] = useState(false);
   const [passwordShort, setPasswordShort] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(false);
+  const [badCardLength, setBadCardLength] = useState(false);
 
   const companyToggle = () => setCompanyDropdownOpen(prevState => !prevState);
   const stateToggle = () => setstateDropdownOpen(prevState => !prevState);
+
+  useEffect(() => {
+    // Update this array with an read from the DB for all companies on first render
+    var companies = [];
+
+    axios.get(`https://cs4400-api.herokuapp.com/companies`)
+      .then((response) => {
+        companies = response.data.companies;
+        setCompanies(companies);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
+  }, [])
 
   const handleInput = (target) => {
     var id = target.id;
@@ -78,22 +98,62 @@ function ManagerCustomerRegistration() {
     // Add register logic 
     setPasswordMatch(false);
     setPasswordShort(false);
+    setAllFieldsPresent(false);
+    setBadZipCode(false);
+    setRegisterFail(false);
+    setRegisterSuccess(false);
+    setInvalidCreditCardNums(false);
 
     console.log(firstName, lastName, username, password, confirmPassword, address, city, stateSelected, zipcode);
 
-    if (password.length < 7) {
-      setPasswordShort(true);
-    }
-    if (password !== confirmPassword) {
-      setPasswordMatch(true);
+    if (firstName === "" || firstName === "" || lastName === "" || username === "" || password === "" || confirmPassword === "") {
+      setAllFieldsPresent(true);
+
+    } else if (password.length < 7 || password !== confirmPassword) {
+      if (password.length < 7) {
+        setPasswordShort(true);
+      }
+
+      if (password !== confirmPassword ) {
+        setPasswordMatch(true);
+      }
+
+    } else if (creditCards.length < 1 || creditCards.length > 5) {
+      setInvalidCreditCardNums(true);
+
+    } else if (!zipcode.match(/^\d{5}$/)) {
+      setBadZipCode(true);
+
+    } else {
+      var cards = ""
+      for(var i = 0; i < creditCards.length; i++) {
+        cards += `/${creditCards[i]}`;
+      }
+      console.log(cards);  
+
+      axios.get(`https://cs4400-api.herokuapp.com/register/manager/customer/${firstName}/${lastName}/${username}/${password}/${confirmPassword}/${companySelected.toString()}/${address}/${city}/${stateSelected}/${zipcode}${cards}`)
+        .then((response) => {
+          // console.log(response);
+          setRegisterSuccess(true);
+        })
+        .catch((err) => {
+          // console.log(err);
+          setRegisterFail(true);
+      });
     }
 
   }
 
   const addCard = () => {
-    creditCards.push(creditCardNum);
-    setCreditCardNum("");
-    setCreditCards([...creditCards]);
+    setBadCardLength(false);
+
+    if (creditCardNum.match(/^\d{16}$/)) {
+      creditCards.push(creditCardNum);
+      setCreditCardNum("");
+      setCreditCards([...creditCards]);
+    } else {
+      setBadCardLength(true);
+    }
   };
 
   const removeCard = (card) => {
@@ -101,7 +161,6 @@ function ManagerCustomerRegistration() {
     creditCards.splice(indexToRemove, 1);
     setCreditCards([...creditCards]);
   }
-
 
   const handleCompanyClick = (company) => {
     setCompanySelected(company);
@@ -290,6 +349,10 @@ function ManagerCustomerRegistration() {
               </Col>
             </Row>
 
+            <Alert isOpen={allFieldsPresent} color="danger">
+              All fields must have a value!
+            </Alert>
+
             <Alert isOpen={passwordShort} color="danger">
               Password must be at least 8 characters!
             </Alert>
@@ -298,10 +361,30 @@ function ManagerCustomerRegistration() {
               Passwords did not match!
             </Alert>
 
-            <div className="LoginButton">
+            <Alert isOpen={badZipCode} color="danger">
+              Zipcode must be exactly 5 digits
+            </Alert>
+
+            <Alert isOpen={badCardLength} color="danger">
+              Credit Card must be exactly 16 digits!
+            </Alert>
+
+            <Alert isOpen={invalidCreditCardNums} color="danger">
+              Customers must have at least 1 card, and at most 5! 
+            </Alert>
+
+            <FormGroup className="LoginButton">
               <Button color="primary" onClick={ goBack }>Back</Button> {' '}
               <Button color="primary" onClick={ register }>Register</Button>
-            </div>
+            </FormGroup>
+
+            <Alert isOpen={registerSuccess} color="success">
+              Registration Successful!
+            </Alert>
+
+            <Alert isOpen={registerFail} color="danger">
+              Registration Failed! Entry already exists in the DB!
+            </Alert>
 
           </Form>
         </div>
