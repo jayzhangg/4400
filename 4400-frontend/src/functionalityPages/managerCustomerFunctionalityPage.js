@@ -4,33 +4,34 @@ import { useHistory } from 'react-router-dom';
 
 function ManagerCustomerFunctionalityPage() {
   let history = useHistory();
+  var statePayload = history.location.state;
 
   const overviewTheater = () => {
-    history.push("/theater/overview");
+    history.push("/theater/overview", statePayload);
   }
 
   const exploreTheater = () => {
-    history.push("/theater/explore");
+    history.push("/theater/explore", statePayload);
   }
 
   const visitHistory = () => {
-    history.push("/history/visit");
+    history.push("/history/visit", statePayload);
   }
 
   const scheduleMovie = () => {
-    history.push("/movie/schedule");
+    history.push("/movie/schedule", statePayload);
   }
 
   const exploreMovie = () => {
-    history.push("/movie/explore");
+    history.push("/movie/explore", statePayload);
   }
 
   const viewHistory = () => {
-    history.push("/history/view");
+    history.push("/history/view", statePayload);
   }
 
   const goBack = () => {
-    history.push("/");
+    history.goBack();
   }
 
   return (

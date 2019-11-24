@@ -23,7 +23,6 @@ function LoginPage() {
       // console.log(response);
       var data = response.data;
       var userType = "";
-      var statePayload = {username: username, userType: userType};
 
       if (data.isAdmin && data.isCustomer) {
         userType = "adminCustomer";
@@ -40,6 +39,7 @@ function LoginPage() {
       }
 
       // console.log(userType);
+      var statePayload = {username: username, userType: userType};
       history.push(`/functionality/${userType}`, statePayload);
     })
     .catch((err) => {

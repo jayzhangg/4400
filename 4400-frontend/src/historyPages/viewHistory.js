@@ -5,6 +5,7 @@ import {useHistory} from 'react-router-dom';
 
 function ViewHistory() {
   let history = useHistory();
+  // console.log(history.location.state);
 
   const columns = [
     {
