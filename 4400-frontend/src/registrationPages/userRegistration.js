@@ -54,11 +54,11 @@ function UserRegistration() {
     }
 
     axios.get(`https://cs4400-api.herokuapp.com/register/user/${firstName}/${lastName}/${username}/${password}/${confirmPassword}`)
-    .then((response) => {
-      console.log(response);
-    })
-    .catch((err) => {
-      console.log(err);
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log(err);
     });
   }
 

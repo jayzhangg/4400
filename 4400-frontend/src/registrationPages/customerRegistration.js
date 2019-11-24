@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Form, FormGroup, Label, Input, Col, Row, Alert, ListGroup, ListGroupItem } from 'reactstrap';
 import { useHistory } from 'react-router-dom';
+import axios from 'axios';
 
 function CustomerRegistration() {
   let history = useHistory();
@@ -15,6 +16,7 @@ function CustomerRegistration() {
 
   const [passwordShort, setPasswordShort] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(false);
+  const [badCardLength, setBadCardLength] = useState(false);
 
   const handleInput = (target) => {
     var id = target.id;
@@ -41,7 +43,7 @@ function CustomerRegistration() {
   }
 
   const goBack = () => {
-    history.push("/register");
+    history.goBack();
   }
 
   const register = () => {
@@ -50,7 +52,7 @@ function CustomerRegistration() {
     setPasswordMatch(false);
     setPasswordShort(false);
 
-    console.log("first Name", firstName, "last Name", lastName, "username", username, "password", password, "confirmPass", confirmPassword);
+    console.log(firstName, lastName, username, password, confirmPassword, creditCards);
 
     if (password.length < 7) {
       setPasswordShort(true);
@@ -58,12 +60,32 @@ function CustomerRegistration() {
     if (password !== confirmPassword) {
       setPasswordMatch(true);
     }
+
+    var cards = ""
+    for(var i = 0; i < creditCards.length; i++) {
+      cards += `/${creditCards[i]}`;
+    }
+    console.log(cards);
+
+    axios.get(`https://cs4400-api.herokuapp.com/register/customer/${firstName}/${lastName}/${username}/${password}/${confirmPassword}${cards}`)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
   }
 
   const addCard = () => {
-    creditCards.push(creditCardNum);
-    setCreditCardNum("");
-    setCreditCards([...creditCards]);
+    setBadCardLength(false);
+
+    if (creditCardNum.match(/^\d{16}$/)) {
+      creditCards.push(creditCardNum);
+      setCreditCardNum("");
+      setCreditCards([...creditCards]);
+    } else {
+      setBadCardLength(true);
+    }
   };
 
   const removeCard = (card) => {
@@ -156,6 +178,10 @@ function CustomerRegistration() {
 
             <Alert isOpen={passwordMatch} color="danger">
               Passwords did not match!
+            </Alert>
+
+            <Alert isOpen={badCardLength} color="danger">
+              Credit Card must be exactly 16 digits!
             </Alert>
 
             <div className="LoginButton">
