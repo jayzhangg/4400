@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 // import { ToggleButton, ToggleButtonGroup, Button, Form } from 'react-bootstrap';
 import { Button, Form, FormGroup, Label, Input, Alert } from 'reactstrap';
 import { useHistory } from 'react-router-dom';
+import axios from 'axios';
 
 function LoginPage() {
 
@@ -17,12 +18,16 @@ function LoginPage() {
     setShowAlert(false);
 
     // If username is correct, navigate away, else display error
-    // Make sure to push to the correct / address based on what type of user the person loggin in is
-    if (username === "" && password === "") {
-      history.push("/functionality/user");
-    } else {
-      setShowAlert(true);
-    }
+    // Make sure to push to the correct / address based on what type of user the person logged in is
+
+    // sample GET that works to backend
+    axios.get("https://cors-anywhere.herokuapp.com/https://cs4400-api.herokuapp.com/login/georgep/111111111")
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (err) {
+      console.log(err);
+    })
   }
 
   const navigateToRegister = () => {
