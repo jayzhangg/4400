@@ -12,6 +12,9 @@ function UserRegistration() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [registerSuccess, setRegisterSuccess] = useState(false);
+  const [registerFail, setRegisterFail] = useState(false);
+  const [allFieldsPresent, setAllFieldsPresent] = useState(false);
   const [passwordShort, setPasswordShort] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(false);
 
@@ -43,23 +46,34 @@ function UserRegistration() {
   const register = () => {
     setPasswordMatch(false);
     setPasswordShort(false);
+    setAllFieldsPresent(false);
+    setRegisterSuccess(false);
+    setRegisterFail(false);
 
-    console.log(firstName, lastName, username, password, confirmPassword);
+    // console.log(firstName, lastName, username, password, confirmPassword);
 
-    if (password.length < 7) {
-      setPasswordShort(true);
+    if (firstName === "" || firstName === "" || lastName === "" || username === "" || password === "" || confirmPassword === "") {
+      setAllFieldsPresent(true);
+
+    } else if (password.length < 7 || password !== confirmPassword) {
+      if (password.length < 7) {
+        setPasswordShort(true);
+      }
+
+      if (password !== confirmPassword ) {
+        setPasswordMatch(true);
+      }
+    } else {
+      axios.get(`https://cs4400-api.herokuapp.com/register/user/${firstName}/${lastName}/${username}/${password}/${confirmPassword}`)
+        .then((response) => {
+          console.log(response);
+          setRegisterSuccess(true);
+        })
+        .catch((err) => {
+          console.log(err);
+          setRegisterFail(true);
+      });
     }
-    if (password !== confirmPassword) {
-      setPasswordMatch(true);
-    }
-
-    axios.get(`https://cs4400-api.herokuapp.com/register/user/${firstName}/${lastName}/${username}/${password}/${confirmPassword}`)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => {
-        console.log(err);
-    });
   }
 
   return (
@@ -106,6 +120,10 @@ function UserRegistration() {
               </Col>
             </Row>
 
+            <Alert isOpen={allFieldsPresent} color="danger">
+              All fields must have a value!
+            </Alert>
+
             <Alert isOpen={passwordShort} color="danger">
               Password must be at least 8 characters!
             </Alert>
@@ -114,12 +132,21 @@ function UserRegistration() {
               Passwords did not match!
             </Alert>
 
-            <div className="LoginButton">
+            <FormGroup className="LoginButton">
               <Button color="primary" onClick={ goBack }>Back</Button> {' '}
               <Button color="primary" onClick={ register }>Register</Button>
-            </div>
+            </FormGroup>
+
+            <Alert isOpen={registerSuccess} color="success">
+              Registration Successful!
+            </Alert>
+
+            <Alert isOpen={registerFail} color="danger">
+              Registration Failed! Entry already exists in the DB. 
+            </Alert>
 
           </Form>
+
         </div>
       </div>
   );

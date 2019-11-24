@@ -88,23 +88,24 @@ function ManagerRegistration() {
     setPasswordMatch(false);
     setPasswordShort(false);
 
-    console.log(firstName, lastName, username, password, confirmPassword, companySelected, address, city, stateSelected, zipcode);
+    // console.log(firstName, lastName, username, password, confirmPassword, companySelected, address, city, stateSelected, zipcode);
 
-    if (password.length < 7) {
-      setPasswordShort(true);
+    if (password.length < 7 || password !== confirmPassword) {
+      if (password.length < 7) {
+        setPasswordShort(true);
+      } 
+      if (password !== confirmPassword) {
+        setPasswordMatch(true);
+      }
+    } else {
+        axios.get(`https://cs4400-api.herokuapp.com/register/manager/${firstName}/${lastName}/${username}/${password}/${confirmPassword}/${companySelected}/${address}/${city}/${stateSelected}/${zipcode}`)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => {
+          console.log(err);
+      });
     }
-    if (password !== confirmPassword) {
-      setPasswordMatch(true);
-    }
-
-    axios.get(`https://cs4400-api.herokuapp.com/register/manager/${firstName}/${lastName}/${username}/${password}/${confirmPassword}/${companySelected}/${address}/${city}/${stateSelected}/${zipcode}`)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => {
-        console.log(err);
-    });
-
   }
 
   const handleCompanyClick = (company) => {
