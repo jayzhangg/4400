@@ -28,6 +28,10 @@ function ManagerRegistration() {
   const [companySelected, setCompanySelected] = useState("Choose Company");
   const [stateSelected, setStateSelected] = useState("Choose State");
 
+  const [registerSuccess, setRegisterSuccess] = useState(false);
+  const [registerFail, setRegisterFail] = useState(false);
+  const [allFieldsPresent, setAllFieldsPresent] = useState(false);
+  const [badZipCode, setBadZipCode] = useState(false);
   const [passwordShort, setPasswordShort] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(false);
 
@@ -87,25 +91,35 @@ function ManagerRegistration() {
     // Add register logic 
     setPasswordMatch(false);
     setPasswordShort(false);
+    setAllFieldsPresent(false);
+    setBadZipCode(false);
+    setRegisterFail(false);
+    setRegisterSuccess(false);
 
     // console.log(firstName, lastName, username, password, confirmPassword, companySelected, address, city, stateSelected, zipcode);
 
-    if (password.length < 7 || password !== confirmPassword) {
+    if (firstName === "" || firstName === "" || lastName === "" || username === "" || password === "" || confirmPassword === "" || companySelected === "Choose Company" || stateSelected === "Choose State") {
+      setAllFieldsPresent(true);
+
+    } else if (password.length < 7 || password !== confirmPassword) {
       if (password.length < 7) {
         setPasswordShort(true);
       } 
       if (password !== confirmPassword) {
         setPasswordMatch(true);
       }
+    } else if (!zipcode.match(/^\d{5}$/)) {
+      setBadZipCode(true);
+
     } else {
-        axios.get(`https://cs4400-api.herokuapp.com/register/manager/${firstName}/${lastName}/${username}/${password}/${confirmPassword}/${companySelected}/${address}/${city}/${stateSelected}/${zipcode}`)
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((err) => {
-          console.log(err);
-      });
-    }
+      axios.get(`https://cs4400-api.herokuapp.com/register/manager/${username}/${companySelected.toString()}/${address}/${city}/${stateSelected}/${zipcode}/${firstName}/${lastName}/${password}/${confirmPassword}`)
+      .then((response) => {
+        setRegisterSuccess(true);
+      })
+      .catch((err) => {
+        setRegisterFail(true);
+    });
+  }
   }
 
   const handleCompanyClick = (company) => {
@@ -261,6 +275,10 @@ function ManagerRegistration() {
               </Col>
             </Row>
 
+            <Alert isOpen={allFieldsPresent} color="danger">
+              All fields must have a value!
+            </Alert>
+
             <Alert isOpen={passwordShort} color="danger">
               Password must be at least 8 characters!
             </Alert>
@@ -269,10 +287,23 @@ function ManagerRegistration() {
               Passwords did not match!
             </Alert>
 
-            <div className="LoginButton">
+            <Alert isOpen={badZipCode} color="danger">
+              Zipcode must be exactly 5 digits
+            </Alert>
+
+            <FormGroup className="LoginButton">
               <Button color="primary" onClick={ goBack }>Back</Button> {' '}
               <Button color="primary" onClick={ register }>Register</Button>
-            </div>
+            </FormGroup>
+
+            <Alert isOpen={registerSuccess} color="success">
+              Registration Successful!
+            </Alert>
+
+            <Alert isOpen={registerFail} color="danger">
+              Registration Failed! Entry already exists in the DB!
+            </Alert>
+
 
           </Form>
         </div>
