@@ -14,6 +14,10 @@ function CustomerRegistration() {
   const [creditCardNum, setCreditCardNum] = useState("");
   const [creditCards, setCreditCards] = useState([]);
 
+  const [registerSuccess, setRegisterSuccess] = useState(false);
+  const [registerFail, setRegisterFail] = useState(false);
+  const [allFieldsPresent, setAllFieldsPresent] = useState(false);
+  const [invalidCreditCardNums, setInvalidCreditCardNums] = useState(false);
   const [passwordShort, setPasswordShort] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(false);
   const [badCardLength, setBadCardLength] = useState(false);
@@ -47,33 +51,47 @@ function CustomerRegistration() {
   }
 
   const register = () => {
-    // Do credit card validation + API call to write to DB
-    // Probably do a GET first of all credit card nums, check if new num is in it, then add, also check if exactly 16 chars
     setPasswordMatch(false);
     setPasswordShort(false);
+    setAllFieldsPresent(false);
+    setRegisterSuccess(false);
+    setRegisterFail(false);
+    setInvalidCreditCardNums(false);
 
     console.log(firstName, lastName, username, password, confirmPassword, creditCards);
 
-    if (password.length < 7) {
-      setPasswordShort(true);
-    }
-    if (password !== confirmPassword) {
-      setPasswordMatch(true);
-    }
+    if (firstName === "" || firstName === "" || lastName === "" || username === "" || password === "" || confirmPassword === "") {
+      setAllFieldsPresent(true);
 
-    var cards = ""
-    for(var i = 0; i < creditCards.length; i++) {
-      cards += `/${creditCards[i]}`;
-    }
-    console.log(cards);
+    } else if (password.length < 7 || password !== confirmPassword) {
+      if (password.length < 7) {
+        setPasswordShort(true);
+      }
 
-    axios.get(`https://cs4400-api.herokuapp.com/register/customer/${firstName}/${lastName}/${username}/${password}/${confirmPassword}${cards}`)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => {
-        console.log(err);
-    });
+      if (password !== confirmPassword ) {
+        setPasswordMatch(true);
+      }
+
+    } else if (creditCards.length < 1 || creditCards.length > 5) {
+      setInvalidCreditCardNums(true);
+
+    } else {
+      var cards = ""
+      for(var i = 0; i < creditCards.length; i++) {
+        cards += `/${creditCards[i]}`;
+      }
+      console.log(cards);  
+
+      axios.get(`https://cs4400-api.herokuapp.com/register/customer/${firstName}/${lastName}/${username}/${password}/${confirmPassword}${cards}`)
+        .then((response) => {
+          console.log(response);
+          setRegisterSuccess(true);
+        })
+        .catch((err) => {
+          console.log(err);
+          setRegisterFail(true);
+      });
+    }
   }
 
   const addCard = () => {
@@ -172,6 +190,10 @@ function CustomerRegistration() {
               </Col>
             </Row>
 
+            <Alert isOpen={allFieldsPresent} color="danger">
+              All fields must have a value!
+            </Alert>
+
             <Alert isOpen={passwordShort} color="danger">
               Password must be at least 8 characters!
             </Alert>
@@ -184,10 +206,22 @@ function CustomerRegistration() {
               Credit Card must be exactly 16 digits!
             </Alert>
 
-            <div className="LoginButton">
+            <Alert isOpen={invalidCreditCardNums} color="danger">
+              Customers must have at least 1 card, and at most 5! 
+            </Alert>
+
+            <FormGroup className="LoginButton">
               <Button color="primary" onClick={ goBack }>Back</Button> {' '}
               <Button color="primary" onClick={ register }>Register</Button>
-            </div>
+            </FormGroup>
+
+            <Alert isOpen={registerSuccess} color="success">
+              Registration Successful!
+            </Alert>
+
+            <Alert isOpen={registerFail} color="danger">
+              Registration Failed! Entry already exists in the DB!
+            </Alert>
 
           </Form>
         </div>
