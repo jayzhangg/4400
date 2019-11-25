@@ -32,7 +32,7 @@ function ManagerCustomerRegistration() {
 
   const [registerSuccess, setRegisterSuccess] = useState(false);
   const [registerFail, setRegisterFail] = useState(false);
-  const [allFieldsPresent, setAllFieldsPresent] = useState(false);
+  const [notAllFieldsPresent, setNotAllFieldsPresent] = useState(false);
   const [badZipCode, setBadZipCode] = useState(false);
   const [invalidCreditCardNums, setInvalidCreditCardNums] = useState(false);
   const [passwordShort, setPasswordShort] = useState(false);
@@ -98,7 +98,7 @@ function ManagerCustomerRegistration() {
     // Add register logic 
     setPasswordMatch(false);
     setPasswordShort(false);
-    setAllFieldsPresent(false);
+    setNotAllFieldsPresent(false);
     setBadZipCode(false);
     setRegisterFail(false);
     setRegisterSuccess(false);
@@ -106,8 +106,8 @@ function ManagerCustomerRegistration() {
 
     console.log(firstName, lastName, username, password, confirmPassword, address, city, stateSelected, zipcode);
 
-    if (firstName === "" || firstName === "" || lastName === "" || username === "" || password === "" || confirmPassword === "") {
-      setAllFieldsPresent(true);
+    if (firstName === "" || lastName === "" || username === "" || password === "" || confirmPassword === "" || address === "" || city === "" || stateSelected === "Choose State") {
+      setNotAllFieldsPresent(true);
 
     } else if (password.length < 7 || password !== confirmPassword) {
       if (password.length < 7) {
@@ -349,7 +349,7 @@ function ManagerCustomerRegistration() {
               </Col>
             </Row>
 
-            <Alert isOpen={allFieldsPresent} color="danger">
+            <Alert isOpen={notAllFieldsPresent} color="danger">
               All fields must have a value!
             </Alert>
 

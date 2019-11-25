@@ -30,7 +30,7 @@ function ManagerRegistration() {
 
   const [registerSuccess, setRegisterSuccess] = useState(false);
   const [registerFail, setRegisterFail] = useState(false);
-  const [allFieldsPresent, setAllFieldsPresent] = useState(false);
+  const [notAllFieldsPresent, setNotAllFieldsPresent] = useState(false);
   const [badZipCode, setBadZipCode] = useState(false);
   const [passwordShort, setPasswordShort] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(false);
@@ -91,15 +91,15 @@ function ManagerRegistration() {
     // Add register logic 
     setPasswordMatch(false);
     setPasswordShort(false);
-    setAllFieldsPresent(false);
+    setNotAllFieldsPresent(false);
     setBadZipCode(false);
     setRegisterFail(false);
     setRegisterSuccess(false);
 
     // console.log(firstName, lastName, username, password, confirmPassword, companySelected, address, city, stateSelected, zipcode);
 
-    if (firstName === "" || firstName === "" || lastName === "" || username === "" || password === "" || confirmPassword === "" || companySelected === "Choose Company" || stateSelected === "Choose State") {
-      setAllFieldsPresent(true);
+    if (firstName === "" || lastName === "" || username === "" || password === "" || confirmPassword === "" || companySelected === "Choose Company" || address === "" || city === "" || stateSelected === "Choose State") {
+      setNotAllFieldsPresent(true);
 
     } else if (password.length < 7 || password !== confirmPassword) {
       if (password.length < 7) {
@@ -275,7 +275,7 @@ function ManagerRegistration() {
               </Col>
             </Row>
 
-            <Alert isOpen={allFieldsPresent} color="danger">
+            <Alert isOpen={notAllFieldsPresent} color="danger">
               All fields must have a value!
             </Alert>
 

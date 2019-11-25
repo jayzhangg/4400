@@ -14,7 +14,7 @@ function UserRegistration() {
 
   const [registerSuccess, setRegisterSuccess] = useState(false);
   const [registerFail, setRegisterFail] = useState(false);
-  const [allFieldsPresent, setAllFieldsPresent] = useState(false);
+  const [notAllFieldsPresent, setNotAllFieldsPresent] = useState(false);
   const [passwordShort, setPasswordShort] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(false);
 
@@ -46,14 +46,14 @@ function UserRegistration() {
   const register = () => {
     setPasswordMatch(false);
     setPasswordShort(false);
-    setAllFieldsPresent(false);
+    setNotAllFieldsPresent(false);
     setRegisterSuccess(false);
     setRegisterFail(false);
 
     // console.log(firstName, lastName, username, password, confirmPassword);
 
-    if (firstName === "" || firstName === "" || lastName === "" || username === "" || password === "" || confirmPassword === "") {
-      setAllFieldsPresent(true);
+    if (firstName === "" || lastName === "" || username === "" || password === "" || confirmPassword === "") {
+      setNotAllFieldsPresent(true);
 
     } else if (password.length < 7 || password !== confirmPassword) {
       if (password.length < 7) {
@@ -120,7 +120,7 @@ function UserRegistration() {
               </Col>
             </Row>
 
-            <Alert isOpen={allFieldsPresent} color="danger">
+            <Alert isOpen={notAllFieldsPresent} color="danger">
               All fields must have a value!
             </Alert>
 
