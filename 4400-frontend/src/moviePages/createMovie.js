@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Button, Form, FormGroup, Label, Input, Col, Row } from 'reactstrap';
+import { Alert, Button, Form, FormGroup, Label, Input, Col, Row } from 'reactstrap';
 import {useHistory} from 'react-router-dom';
 import moment from 'moment';
+import axios from 'axios';
 
 import { SingleDatePicker } from 'react-dates';
 
@@ -13,6 +14,12 @@ function CreateMovie() {
   const [duration, setDuration] = useState("");
 
   const [focused, setFocused] = useState(false);
+
+  const [createSuccess, setCreateSuccess] = useState(false);
+  const [createFail, setCreateFail] = useState(false);
+  const [badDuration, setBadDuration] = useState(false);
+
+  const falseFunc = () => false;
 
   const handleInput = (target) => {
     var id = target.id;
@@ -35,8 +42,28 @@ function CreateMovie() {
   }
 
   const create = () => {
+    setBadDuration(false);
+    setCreateFail(false);
+    setCreateSuccess(false);
+
+    if (!duration.match(/^[0-9]*$/)) {
+      setBadDuration(true);
+
+    } 
     // Add create logic 
     console.log(name, duration, date);
+    var formattedDate = date.format('YYYY-MM-DD');
+    console.log(formattedDate); 
+
+    axios.get(`https://cs4400-api.herokuapp.com/admin/create_movie/${name.toString()}/${duration}/${formattedDate}`)
+      .then((response) => {
+        // console.log(response);
+        setCreateSuccess(true);
+      })
+      .catch((err) => {
+        // console.log(err);
+        setCreateFail(true);
+    });
 
   }
 
@@ -78,6 +105,7 @@ function CreateMovie() {
                           onDateChange={(date) => handleDateChange(date)}
                           focused={focused}
                           onFocusChange={({focused}) => setFocused(focused)}
+                          isOutsideRange={falseFunc}
                           id="0"
                           numberOfMonths={1}
                           showDefaultInputIcon
@@ -85,14 +113,24 @@ function CreateMovie() {
                         />                     
                 </FormGroup>              
               </Col>
-   
-
             </Row>
 
-            <div className="LoginButton">
+            <Alert isOpen={badDuration} color="danger">
+              Duration must be a digit
+            </Alert>
+
+            <FormGroup className="LoginButton">
               <Button color="primary" onClick={ goBack }>Back</Button> {' '}
               <Button color="primary" onClick={ create }>Create</Button>
-            </div>
+            </FormGroup>
+
+            <Alert isOpen={createSuccess} color="success">
+              Create Successful!
+            </Alert>
+
+            <Alert isOpen={createFail} color="danger">
+              Create Failed! Entry already exists in the DB. 
+            </Alert>
 
           </Form>
         </div>

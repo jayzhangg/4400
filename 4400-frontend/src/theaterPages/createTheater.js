@@ -29,8 +29,8 @@ function CreateTheater() {
   const [companySelected, setCompanySelected] = useState("Choose Company");
   const [stateSelected, setStateSelected] = useState("Choose State");
 
-  const [registerSuccess, setRegisterSuccess] = useState(false);
-  const [registerFail, setRegisterFail] = useState(false);
+  const [createSuccess, setCreateSuccess] = useState(false);
+  const [createFail, setCreateFail] = useState(false);
   const [notAllFieldsPresent, setNotAllFieldsPresent] = useState(false);
   const [badZipCode, setBadZipCode] = useState(false);
   const [badCapacity, setBadCapacity] = useState(false);
@@ -82,8 +82,8 @@ function CreateTheater() {
     setBadZipCode(false);
     setBadCapacity(false);
     setNotAllFieldsPresent(false);
-    setRegisterSuccess(false);
-    setRegisterFail(false);
+    setCreateSuccess(false);
+    setCreateFail(false);
     // console.log(theaterName, companySelected, address, city, stateSelected, zipcode, capacity, managerSelected);
 
     if (theaterName === "" || address === "" || city === "" || companySelected === "Choose Company" || stateSelected === "Choose State" || managerSelected === "Choose Manager") {
@@ -99,11 +99,11 @@ function CreateTheater() {
       axios.get(`https://cs4400-api.herokuapp.com/admin/create_theater/${theaterName}/${companySelected.toString()}/${address}/${city}/${stateSelected.toString()}/${zipcode}/${capacity}/${managerSelected.toString()}`)
         .then((response) => {
           // console.log(response);
-          setRegisterSuccess(true);
+          setCreateSuccess(true);
         })
         .catch((err) => {
           // console.log(err);
-          setRegisterFail(true);
+          setCreateFail(true);
       });    
     }
   }
@@ -307,12 +307,12 @@ function CreateTheater() {
               <Button color="primary" onClick={ create }>Create</Button>
             </FormGroup>
 
-            <Alert isOpen={registerSuccess} color="success">
-              Registration Successful!
+            <Alert isOpen={createSuccess} color="success">
+              Create Successful!
             </Alert>
 
-            <Alert isOpen={registerFail} color="danger">
-              Registration Failed! Entry already exists in the DB. 
+            <Alert isOpen={createFail} color="danger">
+              Create Failed! Entry already exists in the DB. 
             </Alert>
 
           </Form>
