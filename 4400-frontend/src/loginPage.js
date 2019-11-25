@@ -19,31 +19,31 @@ function LoginPage() {
     // If username is correct, navigate away, else display error
     // Make sure to push to the correct / address based on what type of user the person logged in is
     axios.get(`https://cs4400-api.herokuapp.com/login/${username}/${password}`)
-    .then((response) => {
-      // console.log(response);
-      var data = response.data;
-      var userType = "";
+      .then((response) => {
+        // console.log(response);
+        var data = response.data;
+        var userType = "";
 
-      if (data.isAdmin && data.isCustomer) {
-        userType = "adminCustomer";
-      } else if (data.isAdmin) {
-        userType = "admin";
-      } else if (data.isManager && data.isCustomer) {
-        userType = "managerCustomer";
-      } else if (data.isManager) {
-        userType = "manager";
-      } else if (data.isCustomer) {
-        userType = "customer";
-      } else {
-        userType = "user";
-      }
+        if (data.isAdmin && data.isCustomer) {
+          userType = "adminCustomer";
+        } else if (data.isAdmin) {
+          userType = "admin";
+        } else if (data.isManager && data.isCustomer) {
+          userType = "managerCustomer";
+        } else if (data.isManager) {
+          userType = "manager";
+        } else if (data.isCustomer) {
+          userType = "customer";
+        } else {
+          userType = "user";
+        }
 
-      // console.log(userType);
-      var statePayload = {username: username, userType: userType};
-      history.push(`/functionality/${userType}`, statePayload);
-    })
-    .catch((err) => {
-      setShowAlert(true);
+        // console.log(userType);
+        var statePayload = {username: username, userType: userType};
+        history.push(`/functionality/${userType}`, statePayload);
+      })
+      .catch((err) => {
+        setShowAlert(true);
     })
   }
 

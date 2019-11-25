@@ -4,6 +4,8 @@ import { useHistory } from 'react-router-dom';
 
 function ManagerFunctionalityPage() {
   let history = useHistory();
+  var statePayload = history.location.state;
+  console.log(statePayload);
 
   const overviewTheater = () => {
     history.push("/theater/overview");

@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
-import { Button, Form, FormGroup, Label, Col, Row, Dropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
+import React, { useState, useEffect } from 'react';
+import { Alert, Button, Form, FormGroup, Label, Col, Row, Dropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 import {useHistory} from 'react-router-dom';
 import moment from 'moment';
+import axios from 'axios';
 
 import { SingleDatePicker } from 'react-dates';
 
 function ScheduleMovie() {
   let history = useHistory();
+  var statePayload = history.location.state;
+  var username = statePayload.username;
+  console.log(statePayload);
 
-  var movies = ["J", "A", "Y", "Z"];
-
+  const [movies, setMovies] = useState([]);
   const [movieSelected, setMovieSelected] = useState("Choose Movie");
   const [movieDropdownOpen, setMovieDropdownOpen] = useState(false);
 
@@ -18,16 +21,58 @@ function ScheduleMovie() {
   const [playDate, setPlayDate] = useState(moment.momentObj);
   const [playDateFocused, setPlayDateFocused] = useState(false);
 
+  const [registerSuccess, setRegisterSuccess] = useState(false);
+  const [registerFail, setRegisterFail] = useState(false);
+  const [notAllFieldsPresent, setNotAllFieldsPresent] = useState(false);
+
   const movieToggle = () => setMovieDropdownOpen(prevState => !prevState);
+
+  useEffect(() => {
+    axios.get(`https://cs4400-api.herokuapp.com/movies`)
+      .then((response) => {
+        // console.log(response.data);
+        var movieList = response.data.movies;
+        var movies = [];
+
+        for (var i = 0; i < movieList.length; i++) {
+          movies.push(movieList[i][0]);
+        }
+        
+        setMovies(movies);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
+  }, [])
 
   const goBack = () => {
     history.push("/register");
   }
 
-  const create = () => {
-    // Add create logic 
-    console.log(movieSelected, releaseDate, playDate);
+  const schedule = () => {
+    setNotAllFieldsPresent(false);
+    setRegisterSuccess(false);
+    setRegisterFail(false);
 
+    // Add create logic 
+    if (movieSelected === "Choose Movie" || releaseDate === undefined || playDate === undefined) {
+      setNotAllFieldsPresent(true);
+
+    } else {
+      var formattedReleaseDate = releaseDate.format("YYYY-MM-DD"); 
+      var formattedPlayDate = playDate.format("YYYY-MM-DD"); 
+      console.log(formattedPlayDate, formattedReleaseDate, username, movieSelected.toString());
+
+      axios.get(`https://cs4400-api.herokuapp.com/manager/schedule_movie/${username}/${movieSelected.toString()}/${formattedReleaseDate}/${formattedPlayDate}`)
+        .then((response) => {
+          // console.log(response.data);
+          setRegisterSuccess(true);
+        })
+        .catch((err) => {
+          // console.log(err);
+          setRegisterFail(true);
+      });
+    }
   }
 
   const handleMovieClick = (movie) => {
@@ -49,9 +94,10 @@ function ScheduleMovie() {
         </div>
         <div>
           <Form className="RegistrationForm">
-            <Row>
-              <Col md={4} style={{marginTop: '5px'}}>
-                <FormGroup>
+            <Row style={{marginBottom: "25px"}}>
+              <Col md={6}>
+                <FormGroup style={{marginTop: "10px"}}>
+                  <Label> Name </Label>
                   <Dropdown isOpen={movieDropdownOpen} toggle={movieToggle}>
                       <DropdownToggle caret>
                         {movieSelected}
@@ -79,19 +125,15 @@ function ScheduleMovie() {
                 </FormGroup>
               </Col>
 
-              <Col md={3} style={{marginTop: '10px', textAlign: 'right', paddingRight: '1px'}}>
+              <Col md={6} >
                 <FormGroup>
-                  <Label> Release Date </Label>        
-                </FormGroup>
-              </Col>
-
-              <Col md={5} >
-                <FormGroup>
+                <Label> Release Date </Label>        
                   <SingleDatePicker
                           date={releaseDate}
                           onDateChange={(date) => setReleaseDate(date)}
                           focused={releaseDateFocused}
                           onFocusChange={({focused}) => setReleaseDateFocused(focused)}
+                          isOutsideRange={() => false}
                           id="0"
                           numberOfMonths={1}
                           showDefaultInputIcon
@@ -115,7 +157,8 @@ function ScheduleMovie() {
                           onDateChange={(date) => setPlayDate(date)}
                           focused={playDateFocused}
                           onFocusChange={({focused}) => setPlayDateFocused(focused)}
-                          id="0"
+                          isOutsideRange={() => false}
+                          id="1"
                           numberOfMonths={1}
                           showDefaultInputIcon
                           inputIconPosition="after"
@@ -124,10 +167,22 @@ function ScheduleMovie() {
               </Col>
             </Row>
 
-            <div className="LoginButton">
+            <Alert isOpen={notAllFieldsPresent} color="danger">
+              All fields must have a value!
+            </Alert>
+
+            <FormGroup className="LoginButton">
               <Button color="primary" onClick={ goBack }>Back</Button> {' '}
-              <Button color="primary" onClick={ create }>Create</Button>
-            </div>
+              <Button color="primary" onClick={ schedule }>Schedule</Button>
+            </FormGroup>
+
+            <Alert isOpen={registerSuccess} color="success">
+              Register Successful!
+            </Alert>
+
+            <Alert isOpen={registerFail} color="danger">
+              Register Failed!
+            </Alert>
 
           </Form>
         </div>

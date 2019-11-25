@@ -15,11 +15,10 @@ function CreateMovie() {
 
   const [focused, setFocused] = useState(false);
 
+  const [notAllFieldsPresent, setNotAllFieldsPresent] = useState(false);
   const [createSuccess, setCreateSuccess] = useState(false);
   const [createFail, setCreateFail] = useState(false);
   const [badDuration, setBadDuration] = useState(false);
-
-  const falseFunc = () => false;
 
   const handleInput = (target) => {
     var id = target.id;
@@ -45,26 +44,29 @@ function CreateMovie() {
     setBadDuration(false);
     setCreateFail(false);
     setCreateSuccess(false);
+    setNotAllFieldsPresent(false);
 
-    if (!duration.match(/^[0-9]*$/)) {
+    // Add create logic 
+    var formattedDate = date.format('YYYY-MM-DD');
+    console.log(formattedDate, name, date); 
+
+    if (name === "" || duration === "" || date === undefined) {
+      setNotAllFieldsPresent(true);
+
+    } else if (!duration.match(/^[0-9]*$/)) {
       setBadDuration(true);
 
-    } 
-    // Add create logic 
-    console.log(name, duration, date);
-    var formattedDate = date.format('YYYY-MM-DD');
-    console.log(formattedDate); 
-
-    axios.get(`https://cs4400-api.herokuapp.com/admin/create_movie/${name.toString()}/${duration}/${formattedDate}`)
-      .then((response) => {
-        // console.log(response);
-        setCreateSuccess(true);
-      })
-      .catch((err) => {
-        // console.log(err);
-        setCreateFail(true);
-    });
-
+    } else {
+      axios.get(`https://cs4400-api.herokuapp.com/admin/create_movie/${name.toString()}/${duration}/${formattedDate}`)
+        .then((response) => {
+          // console.log(response);
+          setCreateSuccess(true);
+        })
+        .catch((err) => {
+          // console.log(err);
+          setCreateFail(true);
+      });
+    }
   }
 
   return (
@@ -105,7 +107,7 @@ function CreateMovie() {
                           onDateChange={(date) => handleDateChange(date)}
                           focused={focused}
                           onFocusChange={({focused}) => setFocused(focused)}
-                          isOutsideRange={falseFunc}
+                          isOutsideRange={() => false}
                           id="0"
                           numberOfMonths={1}
                           showDefaultInputIcon
@@ -114,6 +116,10 @@ function CreateMovie() {
                 </FormGroup>              
               </Col>
             </Row>
+
+            <Alert isOpen={notAllFieldsPresent} color="danger">
+              All fields must have a value!
+            </Alert>
 
             <Alert isOpen={badDuration} color="danger">
               Duration must be a digit
