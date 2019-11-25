@@ -2,27 +2,15 @@ import React, { useState, useEffect } from 'react';
 import ReactTable from 'react-table';
 import { Button, Form, FormGroup, Label, Input, Col, Row, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import {useHistory} from 'react-router-dom';
+import axios from 'axios';
 
 function ManageCompany() {
   let history = useHistory();
 
-  // Get initial Data via API call
-  const initialData = [{
-      name: "J",
-      numCityCovered: "0",
-      numTheaters: "0",
-      numEmployee: "0"
-    }, 
-    {
-      name: "AA",
-      numCityCovered: "1",
-      numTheaters: "2",
-      numEmployee: "3"
-  }]
-
   const columns = [{
     Header: "Name",
     accessor: 'name',
+    width: 225,
     Cell: props => (
       <div>
         <input checked={checkboxSelected === props.index.toString()} id={props.index} onChange={(e) => handleCheckboxClick(e)} type="radio"></input> {props.row.name} 
@@ -39,10 +27,6 @@ function ManageCompany() {
       accessor: "numEmployee"
   }]
 
-  // Update this array with an read from the DB for all names on first render
-  var names = ["J", "A", "Y"];
-  var selected = [];
-
   const [nameSelected, setNameSelected] = useState("Choose Name");
   const [cityCoveredFrom, setCityCoveredFrom] = useState("");
   const [cityCoveredTo, setCityCoveredTo] = useState("");
@@ -51,12 +35,43 @@ function ManageCompany() {
   const [employeeFrom, setEmployeeFrom] = useState("");
   const [employeeTo, setEmployeeTo] = useState("");
 
+  const [names, setNames] = useState([]);
   const [nameDropdownOpen, setNameDropdownOpen] = useState(false);
   const [data, setData] = useState([]);
   const [checkboxSelected, setCheckboxSelected] = useState("")
 
   useEffect(() => {
-    setData(initialData);
+    axios.get(`https://cs4400-api.herokuapp.com/companies`)
+      .then((response) => {
+        // console.log(response.data);
+        var companyNames = response.data.companies;
+
+        setNames(companyNames);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
+
+    axios.get(`https://cs4400-api.herokuapp.com/admin/filter_company/ALL/0/100/0/100/0/100/numCityCovered/DES`)
+      .then((response) => {
+        // console.log(response.data);
+
+        var initialData = [];
+        var companyList = response.data.companies;
+
+        for (var i=0; i < companyList.length; i++) {
+          var temp = {}
+          temp.name = companyList[i][0];
+          temp.numCityCovered = companyList[i][1];
+          temp.numTheaters = companyList[i][2];
+          temp.numEmployee = companyList[i][3];
+          initialData.push(temp);
+        }
+        setData(initialData);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
   }, [])
 
   const nameToggle = () => setNameDropdownOpen(prevState => !prevState);
@@ -107,23 +122,28 @@ function ManageCompany() {
   }
 
   const filter = () => {
-    console.log(nameSelected, cityCoveredFrom, cityCoveredTo, theatersFrom, theatersTo, employeeFrom, employeeTo);
+    // console.log(nameSelected, cityCoveredFrom, cityCoveredTo, theatersFrom, theatersTo, employeeFrom, employeeTo);
 
-    // Do a DB read with the given constraints and repopulate the data, its way too hard to filter through all the data in the way this app is structured and using react table 
-    var newData = [{
-      name: "Jasdasd",
-      numCityCovered: "0",
-      numTheaters: "0",
-      numEmployee: "1"
-    }, 
-    {
-      name: "AAfsafs",
-      numCityCovered: "2",
-      numTheaters: "3",
-      numEmployee: "4"
-  }];
-  setData(newData);
+    axios.get(`https://cs4400-api.herokuapp.com/admin/filter_company/${nameSelected.toString()}/${cityCoveredFrom}/${cityCoveredTo}/${theatersFrom}/${theatersTo}/${employeeFrom}/${employeeTo}/numCityCovered/DES`)
+      .then((response) => {
+        console.log(response.data);
 
+        var newData = [];
+        var companyList = response.data.companies;
+
+        for (var i=0; i < companyList.length; i++) {
+          var temp = {}
+          temp.name = companyList[i][0];
+          temp.numCityCovered = companyList[i][1];
+          temp.numTheaters = companyList[i][2];
+          temp.numEmployee = companyList[i][3];
+          newData.push(temp);
+        }
+        setData(newData);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
   }
 
   const handleNameClick = (name) => {
