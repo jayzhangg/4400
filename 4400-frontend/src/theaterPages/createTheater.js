@@ -1,15 +1,10 @@
-import React, { useState } from 'react';
-import { Button, Form, FormGroup, Label, Input, Col, Row, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import React, { useState, useEffect } from 'react';
+import { Alert, Button, Form, FormGroup, Label, Input, Col, Row, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import {useHistory} from 'react-router-dom';
+import axios from 'axios';
 
 function CreateTheater() {
   let history = useHistory();
-
-  // Update this array with an read from the DB for all companies on first render
-  var companies = [1,2,3,4,5,6,7,8,9];
-
-  // Update this array with an read from the DB for all managers on first render
-  var managers = ["J", "A"];
 
   var states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL",
    "GA", "HI", "ID", "IL", "IN", "IA", "KS",
@@ -18,11 +13,14 @@ function CreateTheater() {
       "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA",
        "WA", "WV", "WI", "WY"];
 
-  const [firstName, setFirstName] = useState("");
+  const [theaterName, setTheaterName] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [zipcode, setZipcode] = useState("");
   const [capacity, setCapacity] = useState("");
+
+  const [companies, setCompanies] = useState([]);
+  const [managers, setManagers] = useState([]);
 
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [stateDropdownOpen, setstateDropdownOpen] = useState(false);
@@ -31,16 +29,35 @@ function CreateTheater() {
   const [companySelected, setCompanySelected] = useState("Choose Company");
   const [stateSelected, setStateSelected] = useState("Choose State");
 
+  const [registerSuccess, setRegisterSuccess] = useState(false);
+  const [registerFail, setRegisterFail] = useState(false);
+  const [notAllFieldsPresent, setNotAllFieldsPresent] = useState(false);
+  const [badZipCode, setBadZipCode] = useState(false);
+  const [badCapacity, setBadCapacity] = useState(false);
+
   const companyToggle = () => setCompanyDropdownOpen(prevState => !prevState);
   const stateToggle = () => setstateDropdownOpen(prevState => !prevState);
   const managerToggle = () => setManagerDropdownOpen(prevState => !prevState);
+
+  useEffect(() => {
+    axios.get(`https://cs4400-api.herokuapp.com/companies`)
+      .then((response) => {
+        // console.log(response.data);
+        var companyNames = response.data.companies;
+
+        setCompanies(companyNames);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
+  }, [])
 
   const handleInput = (target) => {
     var id = target.id;
     var val = target.value;
 
-    if (id === "inputFirstName") {
-      setFirstName(val);
+    if (id === "inputTheaterName") {
+      setTheaterName(val);
 
     } else if (id === "inputAddress") {
       setAddress(val);
@@ -62,11 +79,46 @@ function CreateTheater() {
 
   const create = () => {
     // Add create logic 
-    console.log(firstName, companySelected, address, city, stateSelected, zipcode, capacity, managerSelected);
+    setBadZipCode(false);
+    setBadCapacity(false);
+    setNotAllFieldsPresent(false);
+    setRegisterSuccess(false);
+    setRegisterFail(false);
+    // console.log(theaterName, companySelected, address, city, stateSelected, zipcode, capacity, managerSelected);
 
+    if (theaterName === "" || address === "" || city === "" || companySelected === "Choose Company" || stateSelected === "Choose State" || managerSelected === "Choose Manager") {
+      setNotAllFieldsPresent(true);
+
+    } else if (!zipcode.match(/^\d{5}$/)) {
+      setBadZipCode(true);
+
+    } else if (!capacity.match(/^[0-9]*$/)) {
+      setBadCapacity(true);
+
+    } else {
+      axios.get(`https://cs4400-api.herokuapp.com/admin/create_theater/${theaterName}/${companySelected.toString()}/${address}/${city}/${stateSelected.toString()}/${zipcode}/${capacity}/${managerSelected.toString()}`)
+        .then((response) => {
+          // console.log(response);
+          setRegisterSuccess(true);
+        })
+        .catch((err) => {
+          // console.log(err);
+          setRegisterFail(true);
+      });    
+    }
   }
 
   const handleCompanyClick = (company) => {
+    axios.get(`https://cs4400-api.herokuapp.com/admin/available_managers/${company}`)
+      .then((response) => {
+        console.log(response.data);
+        var managerNames = response.data.managers;
+
+        setManagers(managerNames);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
     setCompanySelected(company);
   }
 
@@ -112,8 +164,8 @@ function CreateTheater() {
             <Row>
               <Col md={6}>
                 <FormGroup>
-                  <Label for="inputFirstName"> First Name </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputFirstName" placeholder="Enter username" />
+                  <Label for="inputTheaterName"> Theater Name </Label>
+                  <Input onChange={(e) => handleInput(e.target)} id="inputTheaterName" placeholder="Enter name" />
                 </FormGroup>
               </Col>
 
@@ -238,10 +290,30 @@ function CreateTheater() {
               </Col>
             </Row>
 
-            <div className="LoginButton">
+            <Alert isOpen={notAllFieldsPresent} color="danger">
+              All fields must have a value!
+            </Alert>
+
+            <Alert isOpen={badZipCode} color="danger">
+              Zipcode must be exactly 5 digits
+            </Alert>
+
+            <Alert isOpen={badCapacity} color="danger">
+              Capacity must be a digit
+            </Alert>
+
+            <FormGroup className="LoginButton">
               <Button color="primary" onClick={ goBack }>Back</Button> {' '}
               <Button color="primary" onClick={ create }>Create</Button>
-            </div>
+            </FormGroup>
+
+            <Alert isOpen={registerSuccess} color="success">
+              Registration Successful!
+            </Alert>
+
+            <Alert isOpen={registerFail} color="danger">
+              Registration Failed! Entry already exists in the DB. 
+            </Alert>
 
           </Form>
         </div>
