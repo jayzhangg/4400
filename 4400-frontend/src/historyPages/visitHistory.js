@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ReactTable from 'react-table';
-import { Button, Form, FormGroup, Label, Col, Row, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Alert, Button, Form, FormGroup, Label, Col, Row, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import {useHistory} from 'react-router-dom';
+import axios from 'axios';
 
 import moment from 'moment';
 
@@ -9,6 +10,9 @@ import { SingleDatePicker } from 'react-dates';
 
 function VisitHistory() {
   let history = useHistory();
+  var statePayload = history.location.state;
+  var username = statePayload.username;
+  // console.log(statePayload);
 
   const columns = [
     {
@@ -29,8 +33,7 @@ function VisitHistory() {
     }
 ]
 
-  var companies = ["J", "AA"];
-  
+  const [companies, setCompanies] = useState([]);
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [companySelected, setCompanySelected] = useState("Choose Company");
 
@@ -41,25 +44,42 @@ function VisitHistory() {
   const [moviePlayDateTo, setMoviePlayDateTo] = useState(moment.momentObj);
   const [moviePlayDateToFocused, setMoviePlayDateToFocused] = useState(false);
 
+  const [notAllFieldsPresent, setNotAllFieldsPresent] = useState(false);
+
   const companyToggle = () => setCompanyDropdownOpen(prevState => !prevState);
 
   useEffect(() => {
-    // Get initial Data via API call
-    const initialData = [
-      {
-        theater: "fooooasd",
-        address: "ABC ST AAAAAAA",
-        company: "AA",
-        visitDate: "11/19/2019"
-      }, 
-      {
-        theater: "asfasgasd",
-        address: "ABC ST BBBB",
-        company: "J",
-        visitDate: "11/29/2019"
-      }
-    ]
-    setData(initialData);
+    axios.get(`https://cs4400-api.herokuapp.com/companies`)
+      .then((response) => {
+        // console.log(response.data);
+        var companyList = response.data.companies;
+
+        setCompanies(companyList);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
+
+    axios.get(`https://cs4400-api.herokuapp.com/user/visit_history/ALL/${username}/2010-03-21/2010-03-25`)
+      .then((response) => {
+        // console.log(response.data);
+        var visitList = response.data.visits;
+        var visits = [];
+
+        for (var i = 0; i < visitList.length; i++) {
+          var temp = {};
+          temp.theater = visitList[i][0];
+          temp.address = `${visitList[i][1]}, ${visitList[i][2]}, ${visitList[i][3]} ${visitList[i][4]}`;
+          temp.company = visitList[i][5];
+          temp.visitDate = visitList[i][6];
+          visits.push(temp);
+        }
+
+        setData(visits);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
   }, [])
 
   const goBack = () => {
@@ -67,23 +87,37 @@ function VisitHistory() {
   }
 
   const filter = () => {
-    console.log(companySelected, moviePlayDateFrom, moviePlayDateTo);
-    // Do a DB read with the given constraints and repopulate the data, its way too hard to filter through all the data in the way this app is structured and using react table 
-    const newData = [
-      {
-        theater: "ADFA",
-        address: "ADS BB AAAAAAA",
-        company: "J",
-        visitDate: "9/5/2019"
-      }, 
-      {
-        theater: "bfsdf",
-        address: "tha ST BBBB",
-        company: "AA",
-        visitDate: "4/20/2019"
-      }
-    ]
-    setData(newData);
+    setNotAllFieldsPresent(false);
+    // console.log(companySelected, moviePlayDateFrom, moviePlayDateTo);
+    
+    if (companySelected === "Choose Company" || moviePlayDateFrom === undefined || moviePlayDateTo === undefined) {
+      setNotAllFieldsPresent(true);
+
+    } else {
+      var formattedDateFrom = moviePlayDateFrom.format("YYYY-MM-DD");
+      var formattedDateTo = moviePlayDateTo.format("YYYY-MM-DD");
+
+      axios.get(`https://cs4400-api.herokuapp.com/user/visit_history/${companySelected.toString()}/${username}/${formattedDateFrom}/${formattedDateTo}`)
+        .then((response) => {
+          // console.log(response.data);
+          var visitList = response.data.visits;
+          var visits = [];
+
+          for (var i = 0; i < visitList.length; i++) {
+            var temp = {};
+            temp.theater = visitList[i][0];
+            temp.address = `${visitList[i][1]}, ${visitList[i][2]}, ${visitList[i][3]} ${visitList[i][4]}`;
+            temp.company = visitList[i][5];
+            temp.visitDate = visitList[i][6];
+            visits.push(temp);
+          }
+
+          setData(visits);
+        })
+        .catch((err) => {
+          console.log(err);
+      });
+    }
   }
   const handleCompanyClick = (company) => {
     setCompanySelected(company);
@@ -180,6 +214,10 @@ function VisitHistory() {
                     minRows={5}
                     />
             </FormGroup>
+
+            <Alert isOpen={notAllFieldsPresent} color="danger">
+              All fields must have a value!
+            </Alert>
             
             <div className="LoginButton">
               <Button color="primary" onClick={ goBack }>Back</Button> {' '}
