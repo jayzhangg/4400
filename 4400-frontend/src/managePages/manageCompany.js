@@ -44,7 +44,8 @@ function ManageCompany() {
     axios.get(`https://cs4400-api.herokuapp.com/companies`)
       .then((response) => {
         // console.log(response.data);
-        var companyNames = response.data.companies;
+        var companyNames = ["ALL"]
+        companyNames = companyNames.concat(response.data.companies);
 
         setNames(companyNames);
       })

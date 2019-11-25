@@ -89,7 +89,7 @@ function VisitHistory() {
   const filter = () => {
     setNotAllFieldsPresent(false);
     // console.log(companySelected, moviePlayDateFrom, moviePlayDateTo);
-    
+
     if (companySelected === "Choose Company" || moviePlayDateFrom === undefined || moviePlayDateTo === undefined) {
       setNotAllFieldsPresent(true);
 
@@ -183,6 +183,7 @@ function VisitHistory() {
                           onDateChange={(date) => setMoviePlayDateFrom(date)}
                           focused={moviePlayDateFromFocused}
                           onFocusChange={({focused}) => setMoviePlayDateFromFocused(focused)}
+                          isOutsideRange={() => false}
                           id="2"
                           numberOfMonths={1}
                           showDefaultInputIcon
@@ -194,6 +195,7 @@ function VisitHistory() {
                           onDateChange={(date) => setMoviePlayDateTo(date)}
                           focused={moviePlayDateToFocused}
                           onFocusChange={({focused}) => setMoviePlayDateToFocused(focused)}
+                          isOutsideRange={() => false}
                           id="3"
                           numberOfMonths={1}
                           showDefaultInputIcon
