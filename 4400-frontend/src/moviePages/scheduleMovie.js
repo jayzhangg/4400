@@ -10,14 +10,14 @@ function ScheduleMovie() {
   let history = useHistory();
   var statePayload = history.location.state;
   var username = statePayload.username;
-  console.log(statePayload);
+  // console.log(statePayload);
 
   const [movies, setMovies] = useState([]);
+  const [releaseDateList, setReleaseDateList] = useState([]);
   const [movieSelected, setMovieSelected] = useState("Choose Movie");
   const [movieDropdownOpen, setMovieDropdownOpen] = useState(false);
+  const [releaseDate, setReleaseDate] = useState("Select a Movie");
 
-  const [releaseDate, setReleaseDate] = useState(moment.momentObj);
-  const [releaseDateFocused, setReleaseDateFocused] = useState(false);
   const [playDate, setPlayDate] = useState(moment.momentObj);
   const [playDateFocused, setPlayDateFocused] = useState(false);
 
@@ -33,11 +33,13 @@ function ScheduleMovie() {
         // console.log(response.data);
         var movieList = response.data.movies;
         var movies = [];
+        var releaseDates = [];
 
         for (var i = 0; i < movieList.length; i++) {
           movies.push(movieList[i][0]);
+          releaseDates.push(movieList[i][1]);
         }
-        
+        setReleaseDateList(releaseDates);
         setMovies(movies);
       })
       .catch((err) => {
@@ -76,6 +78,10 @@ function ScheduleMovie() {
   }
 
   const handleMovieClick = (movie) => {
+    console.log(releaseDateList);
+    var index = movies.indexOf(movie);
+    console.log(releaseDateList[index]);
+    setReleaseDate(releaseDateList[index]);
     setMovieSelected(movie);
   }
 
@@ -128,18 +134,10 @@ function ScheduleMovie() {
               <Col md={6} >
                 <FormGroup>
                 <Label> Release Date </Label>        
-                  <SingleDatePicker
-                          date={releaseDate}
-                          onDateChange={(date) => setReleaseDate(date)}
-                          focused={releaseDateFocused}
-                          onFocusChange={({focused}) => setReleaseDateFocused(focused)}
-                          isOutsideRange={() => false}
-                          id="0"
-                          numberOfMonths={1}
-                          showDefaultInputIcon
-                          inputIconPosition="after"  
-                        />                     
-                </FormGroup>              
+                  <h5>
+                    {releaseDate}                 
+                  </h5>
+                </FormGroup>
               </Col>
             </Row>
 
