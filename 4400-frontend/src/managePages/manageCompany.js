@@ -111,8 +111,8 @@ function ManageCompany() {
 
   const navigateToCompanyDetail = () => {
     if (checkboxSelected !== "") {
-      var theaterName = data[parseInt(checkboxSelected)];
-      history.push("/company/detail/" + theaterName.name);
+      var companyName = data[parseInt(checkboxSelected)];
+      history.push("/company/detail/" + companyName.name.toString(), {companyName: companyName.name.toString()});
     } 
   }
 
