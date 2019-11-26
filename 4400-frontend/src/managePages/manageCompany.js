@@ -266,7 +266,7 @@ function ManageCompany() {
               <ReactTable
                     data={data}
                     columns={columns}
-                    minRows={5}
+                    defaultPageSize={5}
                     />
             </FormGroup>
 
