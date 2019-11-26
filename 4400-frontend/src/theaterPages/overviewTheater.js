@@ -12,7 +12,7 @@ function OverviewTheater() {
   let history = useHistory();
   var statePayload = history.location.state;
   var username = statePayload.username;
-  console.log(statePayload);
+  // console.log(statePayload);
 
   const columns = [{
     Header: "Movie Name",
@@ -48,7 +48,7 @@ function OverviewTheater() {
   useEffect(() => {
     axios.get(`https://cs4400-api.herokuapp.com/manager/filter_theater/${username}/%/%/%/%/%/%/%/false`)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         var movieList = response.data.movies;
         var movieData = [];
 
@@ -101,7 +101,7 @@ function OverviewTheater() {
   }
 
   const filter = () => {
-    console.log(movieName, movieDurationFrom, movieDurationTo, selected, movieReleaseDateFrom, movieReleaseDateTo, moviePlayDateFrom, moviePlayDateTo);
+    // console.log(movieName, movieDurationFrom, movieDurationTo, selected, movieReleaseDateFrom, movieReleaseDateTo, moviePlayDateFrom, moviePlayDateTo);
 
     var useMovieName = setToAll(movieName);
     var useMovieDurationFrom = setToAll(movieDurationFrom);
@@ -111,8 +111,8 @@ function OverviewTheater() {
     var useMoviePlayDateFrom = setToAll(moviePlayDateFrom);
     var useMoviePlayDateTo = setToAll(moviePlayDateTo);
 
-    console.log(username, useMovieName, useMovieDurationFrom, useMovieDurationTo, useMovieReleaseDateFrom, useMovieReleaseDateTo, useMoviePlayDateFrom, useMoviePlayDateTo, selected);
-    console.log(`https://cs4400-api.herokuapp.com/manager/filter_theater/${username}/${useMovieName}/${useMovieDurationFrom}/${useMovieDurationTo}/${useMovieReleaseDateFrom}/${useMovieReleaseDateTo}/${useMoviePlayDateFrom}/${useMoviePlayDateTo}/${selected}`);
+    // console.log(username, useMovieName, useMovieDurationFrom, useMovieDurationTo, useMovieReleaseDateFrom, useMovieReleaseDateTo, useMoviePlayDateFrom, useMoviePlayDateTo, selected);
+    // console.log(`https://cs4400-api.herokuapp.com/manager/filter_theater/${username}/${useMovieName}/${useMovieDurationFrom}/${useMovieDurationTo}/${useMovieReleaseDateFrom}/${useMovieReleaseDateTo}/${useMoviePlayDateFrom}/${useMoviePlayDateTo}/${selected}`);
 
     axios.get(`https://cs4400-api.herokuapp.com/manager/filter_theater/${username}/${useMovieName}/${useMovieDurationFrom}/${useMovieDurationTo}/${useMovieReleaseDateFrom}/${useMovieReleaseDateTo}/${useMoviePlayDateFrom}/${useMoviePlayDateTo}/${selected}`)
       .then((response) => {
