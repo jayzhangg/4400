@@ -112,8 +112,8 @@ function ExploreTheater() {
     var useTheater = theaterSelected;
     var useCompany = companySelected;
 
-    console.log(useTheater, useCompany, city, stateSelected);
-    // Do a DB read with the given constraints and repopulate the data, its way too hard to filter through all the data in the way this app is structured and using react table 
+    // console.log(useTheater, useCompany, city, stateSelected);
+    
     if (useTheater === "Choose Theater") {
       useTheater = "ALL";
     }
@@ -348,7 +348,7 @@ function ExploreTheater() {
               <ReactTable
                     data={data}
                     columns={columns}
-                    minRows={5}
+                    defaultPageSize={5}
                     />
             </FormGroup>
 

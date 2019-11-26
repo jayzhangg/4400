@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactTable from 'react-table';
 import { Button, Form, FormGroup, Label, Input, Col, Row } from 'reactstrap';
 import {useHistory} from 'react-router-dom';
+import axios from 'axios';
 
 import moment from 'moment';
 
@@ -9,6 +10,9 @@ import { SingleDatePicker } from 'react-dates';
 
 function OverviewTheater() {
   let history = useHistory();
+  var statePayload = history.location.state;
+  var username = statePayload.username;
+  console.log(statePayload);
 
   const columns = [{
     Header: "Movie Name",
@@ -42,22 +46,28 @@ function OverviewTheater() {
   const [moviePlayDateToFocused, setMoviePlayDateToFocused] = useState(false);
 
   useEffect(() => {
-    // Get initial Data via API call
-    const initialData = [
-      {
-        movieName: "J",
-        duration: "120",
-        releaseDate: "11/18/2019",
-        playDate: "11/19/2019"
-      }, 
-      {
-        movieName: "AA",
-        duration: "130",
-        releaseDate: "11/20/2019",
-        playDate: "11/27/2019"
-      }
-    ]
-    setData(initialData);
+    axios.get(`https://cs4400-api.herokuapp.com/manager/filter_theater/${username}/%/%/%/%/%/%/%/false`)
+      .then((response) => {
+        console.log(response.data);
+        var movieList = response.data.movies;
+        var movieData = [];
+
+        for (var i = 0; i < movieList.length; i++) {
+          var temp = {}
+          temp.movieName = movieList[i][0];
+          temp.duration = movieList[i][1];
+          temp.releaseDate = movieList[i][2];
+          temp.playDate = movieList[i][3];
+
+          movieData.push(temp);
+
+        }
+        setData(movieData);
+
+      })
+      .catch((err) => {
+        console.log(err);
+    });
   }, [])
 
   const handleInput = (target) => {
@@ -83,25 +93,49 @@ function OverviewTheater() {
     setSelected(!selected);
   }
 
+  const setToAll = (param) => {
+    if (param === "" || param === undefined) {
+      return "%";
+    }
+    return param;
+  }
+
   const filter = () => {
     console.log(movieName, movieDurationFrom, movieDurationTo, selected, movieReleaseDateFrom, movieReleaseDateTo, moviePlayDateFrom, moviePlayDateTo);
 
-    // Do a DB read with the given constraints and repopulate the data, its way too hard to filter through all the data in the way this app is structured and using react table 
-    const newData = [
-      {
-        movieName: "JAJASJ",
-        duration: "140",
-        releaseDate: "11/20/2019",
-        playDate: "11/29/2019"
-      }, 
-      {
-        movieName: "AFADAD",
-        duration: "140",
-        releaseDate: "11/20/2019",
-        playDate: "11/27/2019"
-      }
-    ]
-    setData(newData);
+    var useMovieName = setToAll(movieName);
+    var useMovieDurationFrom = setToAll(movieDurationFrom);
+    var useMovieDurationTo = setToAll(movieDurationTo);
+    var useMovieReleaseDateFrom = setToAll(movieReleaseDateFrom);
+    var useMovieReleaseDateTo = setToAll(movieReleaseDateTo);
+    var useMoviePlayDateFrom = setToAll(moviePlayDateFrom);
+    var useMoviePlayDateTo = setToAll(moviePlayDateTo);
+
+    console.log(username, useMovieName, useMovieDurationFrom, useMovieDurationTo, useMovieReleaseDateFrom, useMovieReleaseDateTo, useMoviePlayDateFrom, useMoviePlayDateTo, selected);
+    console.log(`https://cs4400-api.herokuapp.com/manager/filter_theater/${username}/${useMovieName}/${useMovieDurationFrom}/${useMovieDurationTo}/${useMovieReleaseDateFrom}/${useMovieReleaseDateTo}/${useMoviePlayDateFrom}/${useMoviePlayDateTo}/${selected}`);
+
+    axios.get(`https://cs4400-api.herokuapp.com/manager/filter_theater/${username}/${useMovieName}/${useMovieDurationFrom}/${useMovieDurationTo}/${useMovieReleaseDateFrom}/${useMovieReleaseDateTo}/${useMoviePlayDateFrom}/${useMoviePlayDateTo}/${selected}`)
+      .then((response) => {
+        console.log(response.data);
+        var movieList = response.data.movies;
+        var movieData = [];
+
+        for (var i = 0; i < movieList.length; i++) {
+          var temp = {}
+          temp.movieName = movieList[i][0];
+          temp.duration = movieList[i][1];
+          temp.releaseDate = movieList[i][2];
+          temp.playDate = movieList[i][3];
+
+          movieData.push(temp);
+
+        }
+        setData(movieData);
+
+      })
+      .catch((err) => {
+        console.log(err);
+    });
   }
 
   return (
@@ -154,6 +188,7 @@ function OverviewTheater() {
                             onDateChange={(date) => setMovieReleaseDateFrom(date)}
                             focused={movieReleaseDateFromFocused}
                             onFocusChange={({focused}) => setMovieReleaseDateFromFocused(focused)}
+                            isOutsideRange={() => false}
                             id="0"
                             numberOfMonths={1}
                             showDefaultInputIcon
@@ -165,6 +200,7 @@ function OverviewTheater() {
                             onDateChange={(date) => setMovieReleaseDateTo(date)}
                             focused={movieReleaseDateToFocused}
                             onFocusChange={({focused}) => setMovieReleaseDateToFocused(focused)}
+                            isOutsideRange={() => false}
                             id="1"
                             numberOfMonths={1}
                             showDefaultInputIcon
@@ -187,6 +223,7 @@ function OverviewTheater() {
                           onDateChange={(date) => setMoviePlayDateFrom(date)}
                           focused={moviePlayDateFromFocused}
                           onFocusChange={({focused}) => setMoviePlayDateFromFocused(focused)}
+                          isOutsideRange={() => false}
                           id="2"
                           numberOfMonths={1}
                           showDefaultInputIcon
@@ -198,6 +235,7 @@ function OverviewTheater() {
                           onDateChange={(date) => setMoviePlayDateTo(date)}
                           focused={moviePlayDateToFocused}
                           onFocusChange={({focused}) => setMoviePlayDateToFocused(focused)}
+                          isOutsideRange={() => false}
                           id="3"
                           numberOfMonths={1}
                           showDefaultInputIcon
@@ -219,7 +257,7 @@ function OverviewTheater() {
               <ReactTable
                     data={data}
                     columns={columns}
-                    minRows={5}
+                    defaultPageSize={5}
                     />
             </FormGroup>
 
