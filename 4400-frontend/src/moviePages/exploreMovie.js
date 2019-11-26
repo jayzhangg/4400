@@ -183,10 +183,10 @@ function ExploreMovie() {
       var formattedMovieFrom = moviePlayDateFrom.format("YYYY-MM-DD");
       var formattedMovieTo = moviePlayDateTo.format("YYYY-MM-DD");
 
-      url +=  `/${formattedMovieFrom}/${formattedMovieTo}`;
+      url += `/${formattedMovieFrom}/${formattedMovieTo}`;
     }
 
-    console.log(url);
+    // console.log(url);
 
     axios.get(url)
       .then((response) => {

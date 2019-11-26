@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ReactTable from 'react-table';
-import { Button, Form, FormGroup, Label, Input, Col, Row, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Alert, Button, Form, FormGroup, Label, Input, Col, Row, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import {useHistory} from 'react-router-dom';
+import axios from 'axios';
 
 import moment from 'moment';
 
@@ -9,6 +10,9 @@ import { SingleDatePicker } from 'react-dates';
 
 function ExploreTheater() {
   let history = useHistory();
+  var statePayload = history.location.state;
+  var username = statePayload.username;
+  // console.log(statePayload);
 
   const columns = [
     {
@@ -29,9 +33,6 @@ function ExploreTheater() {
       accessor: "company"
     }
 ]
-
-  var theaters = ["J", "A", "Y", "Z"];
-  var companies = ["J", "AA"];
   var states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL",
    "GA", "HI", "ID", "IL", "IN", "IA", "KS",
     "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT",
@@ -39,6 +40,8 @@ function ExploreTheater() {
       "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA",
        "WA", "WV", "WI", "WY"];
   
+  const [theaters, setTheaters] = useState([]);     
+  const [companies, setCompanies] = useState([]);    
   const [city, setCity] = useState("");
 
   const [theaterDropdownOpen, setTheaterDropdownOpen] = useState(false);
@@ -55,25 +58,50 @@ function ExploreTheater() {
   const [movieVisitDate, setMovieVisitDate] = useState(moment.momentObj);
   const [movieVisitDateFocused, setMovieVisitDateFocused] = useState(false);
 
+  const [notAllFieldsPresent, setNotAllFieldsPresent] = useState(false);
+  const [visitSuccess, setVisitSuccess] = useState(false);
+  const [visitFail, setVisitFail] = useState(false);
+
   const companyToggle = () => setCompanyDropdownOpen(prevState => !prevState);
   const stateToggle = () => setStateDropdownOpen(prevState => !prevState);
   const theaterToggle = () => setTheaterDropdownOpen(prevState => !prevState);
 
   useEffect(() => {
-    // Get initial Data via API call
-    const initialData = [
-      {
-        theater: "fooooasd",
-        address: "ABC ST AAAAAAA",
-        company: "AA"
-      }, 
-      {
-        theater: "asfasgasd",
-        address: "ABC ST BBBB",
-        company: "J"
-      }
-    ]
-    setData(initialData);
+    axios.get(`https://cs4400-api.herokuapp.com/companies`)
+      .then((response) => {
+        // console.log(response.data);
+        var companyList = response.data.companies;
+
+        setCompanies(companyList);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
+
+    axios.get(`https://cs4400-api.herokuapp.com/user/filter_theater/ALL/ALL`)
+      .then((response) => {
+        // console.log(response.data);
+        var theaterList = response.data.theaters;
+        var theaterData = [];
+        var theaterNames = [];
+
+        for (var i = 0; i < theaterList.length; i++) {
+          var temp = {}
+          temp.theater = theaterList[i][0];
+          temp.address = `${theaterList[i][1]}, ${theaterList[i][2]}, ${theaterList[i][3]} ${theaterList[i][4]}`;
+          temp.company = theaterList[i][5];
+          theaterData.push(temp);
+
+          if (!theaterNames.includes(theaterList[i][0])) {
+            theaterNames.push(theaterList[i][0]);
+          } 
+        }
+        setTheaters(theaterNames);
+        setData(theaterData);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
   }, [])
 
   const goBack = () => {
@@ -81,26 +109,77 @@ function ExploreTheater() {
   }
 
   const filter = () => {
-    console.log(theaterSelected, companySelected, city, stateSelected, movieVisitDate);
+    var useTheater = theaterSelected;
+    var useCompany = companySelected;
+
+    console.log(useTheater, useCompany, city, stateSelected);
     // Do a DB read with the given constraints and repopulate the data, its way too hard to filter through all the data in the way this app is structured and using react table 
-    const newData = [
-      {
-        theater: "ADFA",
-        address: "ADS BB AAAAAAA",
-        company: "J"
-      }, 
-      {
-        theater: "bfsdf",
-        address: "tha ST BBBB",
-        company: "AA"
-      }
-    ]
-    setData(newData);
+    if (useTheater === "Choose Theater") {
+      useTheater = "ALL";
+    }
+
+    if (useCompany === "Choose Company") {
+      useCompany = "ALL";
+    }
+
+    var url = `https://cs4400-api.herokuapp.com/user/filter_theater/${useTheater}/${useCompany}`;
+
+    if (city !== "" && stateSelected !== "Choose State") {
+      url += `/${city}/${stateSelected}`;
+    } else {
+      axios.get(url)
+        .then((response) => {
+          console.log(response.data);
+          var theaterList = response.data.theaters;
+          var theaterData = [];
+          var theaterNames = [];
+
+          for (var i = 0; i < theaterList.length; i++) {
+            var temp = {}
+            temp.theater = theaterList[i][0];
+            temp.address = `${theaterList[i][1]}, ${theaterList[i][2]}, ${theaterList[i][3]} ${theaterList[i][4]}`;
+            temp.company = theaterList[i][5];
+            theaterData.push(temp);
+
+            if (!theaterNames.includes(theaterList[i][0])) {
+              theaterNames.push(theaterList[i][0]);
+            } 
+          }
+          setTheaters(theaterNames);
+          setData(theaterData);
+        })
+        .catch((err) => {
+          console.log(err);
+      });
+    }
   }
 
   const logVisit = () => {
-    console.log(selected);
-    console.log(data[parseInt(selected)]);
+    setNotAllFieldsPresent(false);
+    setVisitSuccess(false);
+    setVisitFail(false);
+
+    var theater = data[parseInt(selected)];
+
+    console.log(theater, movieVisitDate);
+
+    if (theater === undefined || movieVisitDate === undefined) {
+      setNotAllFieldsPresent(true);
+
+    } else {
+      var formattedVisitDate = movieVisitDate.format("YYYY-MM-DD");
+      axios.get(`https://cs4400-api.herokuapp.com/user/visit_theater/${theater.theater}/${theater.company}/${formattedVisitDate}/${username}`)
+        .then((response) => {
+          // console.log(response.data);
+          setVisitSuccess(true);
+
+        })
+        .catch((err) => {
+          // console.log(err);
+          setVisitFail(true);
+      });
+    }
+
   }
 
   const handleInput = (target) => {
@@ -293,6 +372,7 @@ function ExploreTheater() {
                     onDateChange={(date) => setMovieVisitDate(date)}
                     focused={movieVisitDateFocused}
                     onFocusChange={({focused}) => setMovieVisitDateFocused(focused)}
+                    isOutsideRange={() => false}
                     id="0"
                     numberOfMonths={1}
                     showDefaultInputIcon
@@ -308,6 +388,18 @@ function ExploreTheater() {
               </Col>
 
             </Row>
+
+            <Alert isOpen={notAllFieldsPresent} color="danger">
+              All fields must have a value!
+            </Alert>
+
+            <Alert isOpen={visitSuccess} color="success">
+              Visit Successful!
+            </Alert>
+
+            <Alert isOpen={visitFail} color="danger">
+              Visit Failed!
+            </Alert>
 
           </Form>
         </div>
