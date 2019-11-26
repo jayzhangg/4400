@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ReactTable from 'react-table';
-import { Button, Form, FormGroup, Label, Input, Col, Row, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Alert, Button, Form, FormGroup, Label, Input, Col, Row, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import {useHistory} from 'react-router-dom';
+import axios from 'axios';
 
 import moment from 'moment';
 
@@ -9,6 +10,9 @@ import { SingleDatePicker } from 'react-dates';
 
 function ExploreMovie() {
   let history = useHistory();
+  var statePayload = history.location.state;
+  var username = statePayload.username;
+  // console.log(statePayload);
 
   const columns = [
     {
@@ -38,16 +42,16 @@ function ExploreMovie() {
     }
 ]
 
-  var movies = ["J", "A", "Y", "Z"];
-  var companies = ["J", "AA"];
   var states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL",
    "GA", "HI", "ID", "IL", "IN", "IA", "KS",
     "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT",
      "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK",
       "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA",
        "WA", "WV", "WI", "WY"];
-  var cards = ["abcdfegs", "bcdafsas"];
   
+  const [movies, setMovies] = useState([]);     
+  const [companies, setCompanies] = useState([]);     
+  const [cards, setCards] = useState([]);
   const [city, setCity] = useState("");
 
   const [movieDropdownOpen, setMovieDropdownOpen] = useState(false);
@@ -68,30 +72,79 @@ function ExploreMovie() {
   const [moviePlayDateTo, setMoviePlayDateTo] = useState(moment.momentObj);
   const [moviePlayDateToFocused, setMoviePlayDateToFocused] = useState(false);
 
+  const [notAllFieldsPresent, setNotAllFieldsPresent] = useState(false);
+  const [viewSuccess, setViewSuccess] = useState(false);
+  const [viewFail, setViewFail] = useState(false);
+
   const companyToggle = () => setCompanyDropdownOpen(prevState => !prevState);
   const stateToggle = () => setStateDropdownOpen(prevState => !prevState);
   const movieToggle = () => setMovieDropdownOpen(prevState => !prevState);
   const cardToggle = () => setCardDropdownOpen(prevState => !prevState);
 
   useEffect(() => {
-    // Get initial Data via API call
-    const initialData = [
-      {
-        movie: "J",
-        theater: "fooooasd",
-        address: "ABC ST AAAAAAA",
-        company: "AA",
-        playDate: "11/19/2019"
-      }, 
-      {
-        movie: "JADFSA",
-        theater: "asfasgasd",
-        address: "ABC ST BBBB",
-        company: "J",
-        playDate: "11/29/2019"
-      }
-    ]
-    setData(initialData);
+    axios.get(`https://cs4400-api.herokuapp.com/movies`)
+      .then((response) => {
+        // console.log(response.data);
+        var movieList = response.data.movies;
+        var movies = [];
+
+        for (var i = 0; i < movieList.length; i++) {
+          movies.push(movieList[i][0]);
+        }
+        setMovies(movies);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
+
+    axios.get(`https://cs4400-api.herokuapp.com/companies`)
+      .then((response) => {
+        // console.log(response.data);
+        var companyList = response.data.companies;
+
+        setCompanies(companyList);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
+
+    axios.get(`https://cs4400-api.herokuapp.com/customer/filter_movie/ALL/ALL/%/%`)
+      .then((response) => {
+        // console.log(response.data);
+        var movieList = response.data.movies;
+        var movieData = [];
+
+        for (var i = 0; i < movieList.length; i++) {
+          var temp = {};
+          temp.movie = movieList[i][0];
+          temp.theater = movieList[i][1];
+          temp.address = `${movieList[i][2]}, ${movieList[i][3]}, ${movieList[i][4]} ${movieList[i][5]}`;
+          temp.company = movieList[i][6];
+          temp.playDate = movieList[i][7];
+          temp.releaseDate = movieList[i][8];
+          movieData.push(temp);
+        }
+        setData(movieData);
+
+      })
+      .catch((err) => {
+        console.log(err);
+    });
+
+    axios.get(`https://cs4400-api.herokuapp.com/creditcards/${username}`)
+      .then((response) => {
+        // console.log(response.data);
+        var creditCardList = response.data.creditcards;
+        var creditCardData = [];
+
+        for (var i = 0; i < creditCardList.length; i++) {
+          creditCardData.push(creditCardList[i][0]);
+        }
+        setCards(creditCardData);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
   }, [])
 
   const goBack = () => {
@@ -99,31 +152,88 @@ function ExploreMovie() {
   }
 
   const filter = () => {
-    console.log(movieSelected, companySelected, city, stateSelected, moviePlayDateFrom, moviePlayDateTo);
-    // Do a DB read with the given constraints and repopulate the data, its way too hard to filter through all the data in the way this app is structured and using react table 
-    const newData = [
-      {
-        movie: "bbbb",
-        theater: "ADFA",
-        address: "ADS BB AAAAAAA",
-        company: "J",
-        playDate: "9/5/2019"
-      }, 
-      {
-        movie: "AAF",
-        theater: "bfsdf",
-        address: "tha ST BBBB",
-        company: "AA",
-        playDate: "4/20/2019"
-      }
-    ]
-    setData(newData);
+    // Assigning var values to these for the case where they are empty. Updating state is async and if I wanted to make sure the API was called after these asnyc calls were made,
+    // I need a useEffect function and it's just not worth it
+
+    var useMovie = movieSelected;
+    var useCompany = companySelected;
+    var useCity = city;
+    var useState = stateSelected;
+
+    if (useMovie === "Choose Movie") {
+      useMovie = "ALL";
+    }
+
+    if (useCompany === "Choose Company") {
+      useCompany = "ALL";
+    }
+
+    if (useCity === "") {
+      useCity = "%";
+    }
+
+    if (useState === "Choose State") {
+      useState = "%";
+    }
+
+    // console.log(useMovie, useCompany, useCity, useState, moviePlayDateFrom, moviePlayDateTo);
+    var url = `https://cs4400-api.herokuapp.com/customer/filter_movie/${useMovie}/${useCompany}/${useCity}/${useState}`;
+
+    if (moviePlayDateFrom !== undefined && moviePlayDateTo !== undefined) {
+      var formattedMovieFrom = moviePlayDateFrom.format("YYYY-MM-DD");
+      var formattedMovieTo = moviePlayDateTo.format("YYYY-MM-DD");
+
+      url +=  `/${formattedMovieFrom}/${formattedMovieTo}`;
+    }
+
+    console.log(url);
+
+    axios.get(url)
+      .then((response) => {
+        // console.log(response.data);
+        var movieList = response.data.movies;
+        var movieData = [];
+
+        for (var i = 0; i < movieList.length; i++) {
+          var temp = {};
+          temp.movie = movieList[i][0];
+          temp.theater = movieList[i][1];
+          temp.address = `${movieList[i][2]}, ${movieList[i][3]}, ${movieList[i][4]} ${movieList[i][5]}`;
+          temp.company = movieList[i][6];
+          temp.playDate = movieList[i][7];
+          temp.releaseDate = movieList[i][8];
+          movieData.push(temp);
+        }
+        setData(movieData);
+
+      })
+      .catch((err) => {
+        console.log(err);
+    });
   }
 
   const view = () => {
-    var movie = data[parseInt(selected)];
-    console.log(movie);
+    setNotAllFieldsPresent(false);
+    setViewSuccess(false);
+    setViewFail(false);
 
+    var movie = data[parseInt(selected)];
+    console.log(movie, cardSelected);
+
+    if (movie === undefined || cardSelected === "Choose Card") {
+      setNotAllFieldsPresent(true);
+    } else {
+      axios.get(`https://cs4400-api.herokuapp.com/customer/view_movie/${username}/${cardSelected}/${movie.movie}/${movie.releaseDate}/${movie.playDate}/${movie.theater}/${movie.company}`)
+        .then((response) => {
+          // console.log(response.data);
+          setViewSuccess(true);
+
+        })
+        .catch((err) => {
+          // console.log(err);
+          setViewFail(true);
+      });
+    }
   }
 
   const handleInput = (target) => {
@@ -309,6 +419,7 @@ function ExploreMovie() {
                           onDateChange={(date) => setMoviePlayDateFrom(date)}
                           focused={moviePlayDateFromFocused}
                           onFocusChange={({focused}) => setMoviePlayDateFromFocused(focused)}
+                          isOutsideRange={() => false}
                           id="2"
                           numberOfMonths={1}
                           showDefaultInputIcon
@@ -320,6 +431,7 @@ function ExploreMovie() {
                           onDateChange={(date) => setMoviePlayDateTo(date)}
                           focused={moviePlayDateToFocused}
                           onFocusChange={({focused}) => setMoviePlayDateToFocused(focused)}
+                          isOutsideRange={() => false}
                           id="3"
                           numberOfMonths={1}
                           showDefaultInputIcon
@@ -337,7 +449,7 @@ function ExploreMovie() {
               <ReactTable
                     data={data}
                     columns={columns}
-                    minRows={5}
+                    defaultPageSize={5}
                     />
             </FormGroup>
 
@@ -383,8 +495,19 @@ function ExploreMovie() {
                   <Button color="primary" onClick={ view }>View</Button> {' '}
                 </FormGroup>
               </Col>
-
             </Row>
+
+            <Alert isOpen={notAllFieldsPresent} color="danger">
+              All fields must have a value!
+            </Alert>
+
+            <Alert isOpen={viewSuccess} color="success">
+              Viewing Successful!
+            </Alert>
+
+            <Alert isOpen={viewFail} color="danger">
+              Viewing Failed! You already viewed this!
+            </Alert>
 
           </Form>
         </div>
