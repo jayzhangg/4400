@@ -91,7 +91,7 @@ function ManagerCustomerRegistration() {
   }
 
   const goBack = () => {
-    history.push("/register");
+    history.goBack();
   }
 
   const register = () => {
@@ -212,14 +212,14 @@ function ManagerCustomerRegistration() {
               <Col md={6}>
                 <FormGroup>
                   <Label for="inputFirstName"> First Name </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputFirstName" placeholder="Enter username" />
+                  <Input onChange={(e) => handleInput(e.target)} id="inputFirstName" placeholder="Enter first name" />
                 </FormGroup>
               </Col>
 
               <Col>
                 <FormGroup>
                   <Label for="inputLastName"> Last Name </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputLastName" placeholder="Enter password" />
+                  <Input onChange={(e) => handleInput(e.target)} id="inputLastName" placeholder="Enter last name" />
                 </FormGroup>
               </Col>
             </Row>
