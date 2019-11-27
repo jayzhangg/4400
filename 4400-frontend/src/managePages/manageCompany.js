@@ -98,12 +98,11 @@ function ManageCompany() {
       
     } else if (id === "inputEmployeeTo") {
       setEmployeeTo(val);
-      
     }
   }
 
   const goBack = () => {
-    history.push("/");
+    history.goBack();
   }
 
   const navigateToCreateTheater = () => {
@@ -123,9 +122,38 @@ function ManageCompany() {
   }
 
   const filter = () => {
-    // console.log(nameSelected, cityCoveredFrom, cityCoveredTo, theatersFrom, theatersTo, employeeFrom, employeeTo);
+    var url = `https://cs4400-api.herokuapp.com/admin/filter_company`;
 
-    axios.get(`https://cs4400-api.herokuapp.com/admin/filter_company/${nameSelected.toString()}/${cityCoveredFrom}/${cityCoveredTo}/${theatersFrom}/${theatersTo}/${employeeFrom}/${employeeTo}/numCityCovered/DES`)
+    if (nameSelected === "Choose Name") {
+      url += "/ALL";
+    } else {
+      url += `/${nameSelected.toString()}`;
+    }
+
+    if (cityCoveredFrom === "" || cityCoveredTo === "") {
+      url += "/0/100";
+    } else {
+      url += `/${cityCoveredFrom}/${cityCoveredTo}`;
+    }
+
+    if (theatersFrom === "" || theatersTo === "") {
+      url += "/0/100";
+    } else {
+      url += `/${theatersFrom}/${theatersTo}`;
+    }
+
+    if (employeeFrom === "" || employeeTo === "") {
+      url += "/0/100";
+    } else {
+      url += `/${employeeFrom}/${employeeTo}`;
+    }
+
+    // Default sorting (this doesn't matter since table is sortable through UI via clicks on columns)
+    url += "/numCityCovered/DES";
+
+    // console.log(url);
+    
+    axios.get(url)
       .then((response) => {
         console.log(response.data);
 
@@ -165,7 +193,7 @@ function ManageCompany() {
           <h2>Manage Company</h2>
         </div>
         <div>
-          <Form className="RegistrationForm">
+          <Form className="MovieExploreForm">
             <Row>
               <Col md={4}>
                 <FormGroup>
