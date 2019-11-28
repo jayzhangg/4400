@@ -43,7 +43,6 @@ function ManagerCustomerRegistration() {
   const stateToggle = () => setstateDropdownOpen(prevState => !prevState);
 
   useEffect(() => {
-    // Update this array with an read from the DB for all companies on first render
     var companies = [];
 
     axios.get(`https://cs4400-api.herokuapp.com/companies`)
@@ -86,7 +85,6 @@ function ManagerCustomerRegistration() {
 
     } else if (id === "inputCreditCardNum") {
       setCreditCardNum(val);
-      
     }
   }
 
@@ -94,17 +92,21 @@ function ManagerCustomerRegistration() {
     history.goBack();
   }
 
-  const register = () => {
-    // Add register logic 
+  const removeErrorMessages = () => {
     setPasswordMatch(false);
     setPasswordShort(false);
     setNotAllFieldsPresent(false);
-    setBadZipCode(false);
-    setRegisterFail(false);
     setRegisterSuccess(false);
+    setRegisterFail(false);
     setInvalidCreditCardNums(false);
+    setBadCardLength(false);
+    setBadZipCode(false);
+  }
 
-    console.log(firstName, lastName, username, password, confirmPassword, address, city, stateSelected, zipcode);
+  const register = () => {
+    removeErrorMessages();
+
+    // console.log(firstName, lastName, username, password, confirmPassword, address, city, stateSelected, zipcode);
 
     if (firstName === "" || lastName === "" || username === "" || password === "" || confirmPassword === "" || address === "" || city === "" || stateSelected === "Choose State") {
       setNotAllFieldsPresent(true);
@@ -129,11 +131,22 @@ function ManagerCustomerRegistration() {
       for(var i = 0; i < creditCards.length; i++) {
         cards += `/${creditCards[i]}`;
       }
-      console.log(cards);  
+      // console.log(cards);  
 
       axios.get(`https://cs4400-api.herokuapp.com/register/manager/customer/${firstName}/${lastName}/${username}/${password}/${confirmPassword}/${companySelected.toString()}/${address}/${city}/${stateSelected}/${zipcode}${cards}`)
         .then((response) => {
           // console.log(response);
+          setFirstName("");
+          setLastName("");
+          setUsername("");
+          setPassword("");
+          setConfirmPassword("");
+          setCreditCards([]);
+          setAddress("");
+          setCity("");
+          setZipcode("");
+          setCompanySelected("Choose Company");
+          setStateSelected("Choose State");
           setRegisterSuccess(true);
         })
         .catch((err) => {
@@ -145,18 +158,21 @@ function ManagerCustomerRegistration() {
   }
 
   const addCard = () => {
-    setBadCardLength(false);
+    removeErrorMessages();
 
     if (creditCardNum.match(/^\d{16}$/)) {
       creditCards.push(creditCardNum);
       setCreditCardNum("");
       setCreditCards([...creditCards]);
+
     } else {
       setBadCardLength(true);
     }
   };
 
   const removeCard = (card) => {
+    removeErrorMessages();
+
     var indexToRemove = creditCards.indexOf(card);
     creditCards.splice(indexToRemove, 1);
     setCreditCards([...creditCards]);
@@ -212,14 +228,14 @@ function ManagerCustomerRegistration() {
               <Col md={6}>
                 <FormGroup>
                   <Label for="inputFirstName"> First Name </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputFirstName" placeholder="Enter first name" />
+                  <Input value={firstName} onChange={(e) => handleInput(e.target)} id="inputFirstName" placeholder="Enter first name" />
                 </FormGroup>
               </Col>
 
               <Col>
                 <FormGroup>
                   <Label for="inputLastName"> Last Name </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputLastName" placeholder="Enter last name" />
+                  <Input value={lastName} onChange={(e) => handleInput(e.target)} id="inputLastName" placeholder="Enter last name" />
                 </FormGroup>
               </Col>
             </Row>
@@ -228,7 +244,7 @@ function ManagerCustomerRegistration() {
               <Col md={6}>
                 <FormGroup>
                   <Label for="inputUsername"> Username </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputUsername" placeholder="Enter username" />
+                  <Input value={username} onChange={(e) => handleInput(e.target)} id="inputUsername" placeholder="Enter username" />
                 </FormGroup>
               </Col>
 
@@ -267,28 +283,28 @@ function ManagerCustomerRegistration() {
               <Col md={6}>
                 <FormGroup>
                   <Label for="inputPassword"> Password </Label>
-                  <Input type="password" onChange={(e) => handleInput(e.target)} id="inputPassword" placeholder="Enter password" />
+                  <Input value={password} type="password" onChange={(e) => handleInput(e.target)} id="inputPassword" placeholder="Enter password" />
                 </FormGroup>
               </Col>
 
               <Col md={6}>
                 <FormGroup>
                   <Label for="inputConfirmPassword"> Confirm Password </Label>
-                  <Input type="password" onChange={(e) => handleInput(e.target)} id="inputConfirmPassword" placeholder="Enter password" />
+                  <Input value={confirmPassword} type="password" onChange={(e) => handleInput(e.target)} id="inputConfirmPassword" placeholder="Enter password" />
                 </FormGroup>
               </Col>
             </Row>
 
             <FormGroup>
               <Label for="inputAddress"> Address </Label>
-              <Input onChange={(e) => handleInput(e.target)} id="inputAddress" placeholder="Enter address" />
+              <Input value={address} onChange={(e) => handleInput(e.target)} id="inputAddress" placeholder="Enter address" />
             </FormGroup>
 
             <Row>
               <Col md={4}>
                 <FormGroup>
                   <Label for="inputCity"> City </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputCity" placeholder="Enter City" />
+                  <Input value={city} onChange={(e) => handleInput(e.target)} id="inputCity" placeholder="Enter City" />
                 </FormGroup>
               </Col>
 
@@ -325,7 +341,7 @@ function ManagerCustomerRegistration() {
               <Col md={4}>
                 <FormGroup>
                   <Label for="inputZipcode"> Zipcode </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputZipcode" placeholder="Enter Zipcode" />
+                  <Input value={zipcode} onChange={(e) => handleInput(e.target)} id="inputZipcode" placeholder="Enter Zipcode" />
                 </FormGroup>
               </Col>
             </Row>
