@@ -131,19 +131,19 @@ function ManageCompany() {
     }
 
     if (cityCoveredFrom === "" || cityCoveredTo === "") {
-      url += "/0/100";
+      url += "/%/%";
     } else {
       url += `/${cityCoveredFrom}/${cityCoveredTo}`;
     }
 
     if (theatersFrom === "" || theatersTo === "") {
-      url += "/0/100";
+      url += "/%/%";
     } else {
       url += `/${theatersFrom}/${theatersTo}`;
     }
 
     if (employeeFrom === "" || employeeTo === "") {
-      url += "/0/100";
+      url += "/%/%";
     } else {
       url += `/${employeeFrom}/${employeeTo}`;
     }
