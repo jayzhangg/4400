@@ -32,14 +32,14 @@ function CompanyDetail() {
         accessor: "state",
         sortable: false,
         filterable: false
-    }, 
-    {
-      Header: "Capacity",
-      accessor: "capacity",
-      sortable: false,
-      filterable: false
-    }
-  ]
+      }, 
+      {
+        Header: "Capacity",
+        accessor: "capacity",
+        sortable: false,
+        filterable: false
+      }
+    ]
 
   const [companyName, setCompanyName] = useState("");
   const [employees, setEmployees] = useState("");
@@ -47,13 +47,13 @@ function CompanyDetail() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    console.log(statePayload);
+    // console.log(statePayload);
     var companyName = statePayload.companyName;
     setCompanyName(companyName);
 
     axios.get(`https://cs4400-api.herokuapp.com/admin/company_emps/${companyName}`)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         var employeeNames = response.data.employees;
         var employeeString = "";
 
@@ -69,7 +69,7 @@ function CompanyDetail() {
 
     axios.get(`https://cs4400-api.herokuapp.com/admin/company_theaters/${companyName}`)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         var theaterData = response.data.theaters;
         var theaters = [];
 
