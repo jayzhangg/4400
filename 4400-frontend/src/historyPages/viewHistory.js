@@ -58,23 +58,6 @@ function ViewHistory() {
       .catch((err) => {
         console.log(err);
     });
-    const initialData = [
-      {
-        movie: "J",
-        theater: "fooooasd",
-        company: "AA",
-        cardNumber: "asdagsdas",
-        viewDate: "11/19/2019"
-      }, 
-      {
-        movie: "Jasdasfsa",
-        theater: "agsaf",
-        company: "J",
-        cardNumber: "bdagerasd",
-        viewDate: "11/20/2019"
-      }
-    ]
-    setData(initialData);
   }, [])
 
   const goBack = () => {

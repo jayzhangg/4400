@@ -36,7 +36,7 @@ function ManageUser() {
   const [statusSelected, setStatusSelected] = useState("Choose Status");
   const [data, setData] = useState([]);
 
-  const [statusNotSelected, setStatusNotSelected] = useState(false);
+  const [cannotDeclineApproved, setCannotDeclineApproved] = useState(false);
 
   useEffect(() => {
     axios.get(`https://cs4400-api.herokuapp.com/admin/filter_user/ALL/user_name/DES`)
@@ -90,6 +90,8 @@ function ManageUser() {
   }
 
   const approve = () => {
+    setCannotDeclineApproved(false);
+
     if (selected.length > 0) {
       for (var i= 0; i<selected.length; i++) {
         var username = data[selected[i]].username;
@@ -120,6 +122,8 @@ function ManageUser() {
   }
 
   const decline = () => {
+    setCannotDeclineApproved(false);
+
     if (selected.length > 0) {
       for (var i= 0; i<selected.length; i++) {
         var username = data[selected[i]].username;
@@ -143,7 +147,8 @@ function ManageUser() {
             }
           })
           .catch((err) => {
-            console.log(err);
+            setCannotDeclineApproved(true);
+            // console.log(err);
         });
       }
     }
@@ -151,37 +156,38 @@ function ManageUser() {
 
   const filter = () => {
     // console.log(username, statusSelected);
-    setStatusNotSelected(false);
-    var url = `https://cs4400-api.herokuapp.com/admin/filter_user/${statusSelected}/user_name/DES`;
+    setCannotDeclineApproved(false);
+    var url = `https://cs4400-api.herokuapp.com/admin/filter_user`;
+
+    if (statusSelected === "Choose Status") {
+      url += "/ALL";
+    }
+
+    url += "/user_name/DES";
 
     if (username !== "") {
       url += `/${username}`;
     }
 
-    if (statusSelected === "Choose Status") {
-      setStatusNotSelected(true);
+    axios.get(url)
+      .then((response) => {
+        // console.log(response);
+        var newData = [];
+        var userList = response.data.users;
 
-    } else {
-      axios.get(url)
-        .then((response) => {
-          // console.log(response);
-          var newData = [];
-          var userList = response.data.users;
-
-          for (var i=0; i < userList.length; i++) {
-            var temp = {}
-            temp.username = userList[i][0];
-            temp.creditCardCount = userList[i][1];
-            temp.userType = userList[i][2];
-            temp.status = userList[i][3];
-            newData.push(temp);
-          }
-          setData(newData);
-        })
-        .catch((err) => {
-          console.log(err);
-      });
-    }
+        for (var i=0; i < userList.length; i++) {
+          var temp = {}
+          temp.username = userList[i][0];
+          temp.creditCardCount = userList[i][1];
+          temp.userType = userList[i][2];
+          temp.status = userList[i][3];
+          newData.push(temp);
+        }
+        setData(newData);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
   }
 
   const handleStatusClick = (status) => {
@@ -270,8 +276,8 @@ function ManageUser() {
                     />
             </FormGroup>
 
-            <Alert isOpen={statusNotSelected} color="danger">
-              You must choose a status value to fitler on!
+            <Alert isOpen={cannotDeclineApproved} color="danger">
+              Cannot decline approved users!
             </Alert>
 
             <div className="LoginButton">
