@@ -47,7 +47,7 @@ function CreateMovie() {
     setNotAllFieldsPresent(false);
 
     // Add create logic 
-    console.log(formattedDate, name, date); 
+    // console.log(formattedDate, name, date); 
 
     if (name === "" || duration === "" || date === undefined) {
       setNotAllFieldsPresent(true);
@@ -60,6 +60,9 @@ function CreateMovie() {
       axios.get(`https://cs4400-api.herokuapp.com/admin/create_movie/${name.toString()}/${duration}/${formattedDate}`)
         .then((response) => {
           // console.log(response);
+          setName("");
+          setDuration("");
+          setDate(moment.momentObj);
           setCreateSuccess(true);
         })
         .catch((err) => {
@@ -80,14 +83,14 @@ function CreateMovie() {
               <Col md={6}>
                 <FormGroup>
                   <Label for="inputFirstName"> Name </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputName" placeholder="Enter name" />
+                  <Input value={name} onChange={(e) => handleInput(e.target)} id="inputName" placeholder="Enter name" />
                 </FormGroup>
               </Col>
 
               <Col md={6}>
                 <FormGroup>
                   <Label for="inputCity"> Duration </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputDuration" placeholder="Enter duration" />
+                  <Input value={duration} onChange={(e) => handleInput(e.target)} id="inputDuration" placeholder="Enter duration" />
                 </FormGroup>
               </Col>
 
