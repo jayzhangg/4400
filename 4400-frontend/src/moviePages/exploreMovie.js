@@ -18,6 +18,7 @@ function ExploreMovie() {
     {
       Header: "Movie",
       accessor: 'movie',
+      width: 250,
       Cell: props => (
         <div>
           <input checked={selected === props.index.toString()} id={props.index} onChange={(e) => handleCheckboxClick(e)} type="radio"></input> {props.row.movie} 
@@ -30,7 +31,8 @@ function ExploreMovie() {
     }, 
     {
       Header: "Address",
-      accessor: "address"
+      accessor: "address",
+      width: 250
     }, 
     {
       Header: "Company",
@@ -42,7 +44,7 @@ function ExploreMovie() {
     }
 ]
 
-  var states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL",
+  var states = ["ALL", "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL",
    "GA", "HI", "ID", "IL", "IN", "IA", "KS",
     "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT",
      "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK",
@@ -99,7 +101,7 @@ function ExploreMovie() {
 
     axios.get(`https://cs4400-api.herokuapp.com/companies`)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         var companyList = response.data.companies;
         var companies = ["ALL"];
 
@@ -157,32 +159,35 @@ function ExploreMovie() {
   }
 
   const filter = () => {
-    // Assigning var values to these for the case where they are empty. Updating state is async and if I wanted to make sure the API was called after these asnyc calls were made,
-    // I need a useEffect function and it's just not worth it
-
-    var useMovie = movieSelected;
-    var useCompany = companySelected;
-    var useCity = city;
-    var useState = stateSelected;
-
-    if (useMovie === "Choose Movie") {
-      useMovie = "ALL";
+    setNotAllFieldsPresent(false);
+    setViewSuccess(false);
+    setViewFail(false);
+    
+    var url = `https://cs4400-api.herokuapp.com/customer/filter_movie`;
+    
+    if (movieSelected === "Choose Movie") {
+      url += "/ALL";
+    } else {
+      url += `/${movieSelected.toString()}`;
     }
 
-    if (useCompany === "Choose Company") {
-      useCompany = "ALL";
+    if (companySelected === "Choose Company") {
+      url += "/ALL";
+    } else {
+      url += `/${companySelected.toString()}`;
     }
 
-    if (useCity === "") {
-      useCity = "%";
+    if (city === "") {
+      url += "/%";
+    } else {
+      url += `/${city}`;
     }
 
-    if (useState === "Choose State") {
-      useState = "%";
+    if (stateSelected === "Choose State" || stateSelected === "ALL") {
+      url += "/%";
+    } else {
+      url += `/${stateSelected.toString()}`;
     }
-
-    // console.log(useMovie, useCompany, useCity, useState, moviePlayDateFrom, moviePlayDateTo);
-    var url = `https://cs4400-api.herokuapp.com/customer/filter_movie/${useMovie}/${useCompany}/${useCity}/${useState}`;
 
     if (moviePlayDateFrom !== undefined && moviePlayDateTo !== undefined) {
       var formattedMovieFrom = moviePlayDateFrom.format("YYYY-MM-DD");
@@ -191,6 +196,7 @@ function ExploreMovie() {
       url += `/${formattedMovieFrom}/${formattedMovieTo}`;
     }
 
+    // console.log(useMovie, useCompany, useCity, useState, formattedMovieFrom, formattedMovieTo);
     // console.log(url);
 
     axios.get(url)
@@ -223,16 +229,16 @@ function ExploreMovie() {
     setViewFail(false);
 
     var movie = data[parseInt(selected)];
-    console.log(movie, cardSelected);
+    // console.log(movie, cardSelected);
 
     if (movie === undefined || cardSelected === "Choose Card") {
       setNotAllFieldsPresent(true);
+
     } else {
       axios.get(`https://cs4400-api.herokuapp.com/customer/view_movie/${username}/${cardSelected}/${movie.movie}/${movie.releaseDate}/${movie.playDate}/${movie.theater}/${movie.company}`)
         .then((response) => {
           // console.log(response.data);
           setViewSuccess(true);
-
         })
         .catch((err) => {
           // console.log(err);
@@ -503,7 +509,7 @@ function ExploreMovie() {
             </Row>
 
             <Alert isOpen={notAllFieldsPresent} color="danger">
-              All fields must have a value!
+              You must pick a movie and a card!
             </Alert>
 
             <Alert isOpen={viewSuccess} color="success">
