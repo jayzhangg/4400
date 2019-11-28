@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 function AdminFunctionalityPage() {
   let history = useHistory();
   var statePayload = history.location.state;
-  console.log(statePayload);
+  // console.log(statePayload);
 
   const manageUser = () => {
     history.push("/manage/user", statePayload);

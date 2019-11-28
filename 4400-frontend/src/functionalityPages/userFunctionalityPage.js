@@ -4,13 +4,15 @@ import { useHistory } from 'react-router-dom';
 
 function UserFunctionalityPage() {
   let history = useHistory();
+  var statePayload = history.location.state;
+  // console.log(statePayload);
 
   const exploreTheater = () => {
-    history.push("/theater/explore");
+    history.push("/theater/explore", statePayload);
   }
 
   const visitHistory = () => {
-    history.push("/history/visit");
+    history.push("/history/visit", statePayload);
   }
 
   const goBack = () => {

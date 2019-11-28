@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 function CustomerFunctionalityPage() {
   let history = useHistory();
   var statePayload = history.location.state;
-  console.log(statePayload);
+  // console.log(statePayload);
 
   const exploreTheater = () => {
     history.push("/theater/explore", statePayload);
