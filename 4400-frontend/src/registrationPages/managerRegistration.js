@@ -98,7 +98,7 @@ function ManagerRegistration() {
 
     // console.log(firstName, lastName, username, password, confirmPassword, companySelected, address, city, stateSelected, zipcode);
 
-    if (firstName === "" || lastName === "" || username === "" || password === "" || confirmPassword === "" || companySelected === "Choose Company" || address === "" || city === "" || stateSelected === "Choose State") {
+    if (firstName === "" || lastName === "" || username === "" || password === "" || confirmPassword === "" || companySelected === "Choose Company" || address === "" || city === "" || stateSelected === "Choose State" || zipcode === "") {
       setNotAllFieldsPresent(true);
 
     } else if (password.length < 7 || password !== confirmPassword) {
@@ -114,6 +114,16 @@ function ManagerRegistration() {
     } else {
         axios.get(`https://cs4400-api.herokuapp.com/register/manager/${username}/${companySelected.toString()}/${address}/${city}/${stateSelected}/${zipcode}/${firstName}/${lastName}/${password}/${confirmPassword}`)
         .then((response) => {
+          setFirstName("");
+          setLastName("");
+          setUsername("");
+          setPassword("");
+          setConfirmPassword("");
+          setAddress("");
+          setCity("");
+          setZipcode("");
+          setCompanySelected("Choose Company");
+          setStateSelected("Choose State");
           setRegisterSuccess(true);
         })
         .catch((err) => {
@@ -157,14 +167,14 @@ function ManagerRegistration() {
               <Col md={6}>
                 <FormGroup>
                   <Label for="inputFirstName"> First Name </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputFirstName" placeholder="Enter first name" />
+                  <Input value={firstName} onChange={(e) => handleInput(e.target)} id="inputFirstName" placeholder="Enter first name" />
                 </FormGroup>
               </Col>
 
               <Col>
                 <FormGroup>
                   <Label for="inputLastName"> Last Name </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputLastName" placeholder="Enter last name" />
+                  <Input value={lastName} onChange={(e) => handleInput(e.target)} id="inputLastName" placeholder="Enter last name" />
                 </FormGroup>
               </Col>
             </Row>
@@ -173,7 +183,7 @@ function ManagerRegistration() {
               <Col md={6}>
                 <FormGroup>
                   <Label for="inputUsername"> Username </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputUsername" placeholder="Enter username" />
+                  <Input value={username} onChange={(e) => handleInput(e.target)} id="inputUsername" placeholder="Enter username" />
                 </FormGroup>
               </Col>
 
@@ -212,28 +222,28 @@ function ManagerRegistration() {
               <Col md={6}>
                 <FormGroup>
                   <Label for="inputPassword"> Password </Label>
-                  <Input type="password" onChange={(e) => handleInput(e.target)} id="inputPassword" placeholder="Enter password" />
+                  <Input value={password} type="password" onChange={(e) => handleInput(e.target)} id="inputPassword" placeholder="Enter password" />
                 </FormGroup>
               </Col>
 
               <Col md={6}>
                 <FormGroup>
                   <Label for="inputConfirmPassword"> Confirm Password </Label>
-                  <Input type="password" onChange={(e) => handleInput(e.target)} id="inputConfirmPassword" placeholder="Enter password" />
+                  <Input value={confirmPassword} type="password" onChange={(e) => handleInput(e.target)} id="inputConfirmPassword" placeholder="Enter password" />
                 </FormGroup>
               </Col>
             </Row>
 
             <FormGroup>
-              <Label for="inputAddress"> Address </Label>
-              <Input onChange={(e) => handleInput(e.target)} id="inputAddress" placeholder="Enter address" />
+              <Label for="inputAddress"> Street Address </Label>
+              <Input value={address} onChange={(e) => handleInput(e.target)} id="inputAddress" placeholder="Enter address" />
             </FormGroup>
 
             <Row>
               <Col md={4}>
                 <FormGroup>
                   <Label for="inputCity"> City </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputCity" placeholder="Enter City" />
+                  <Input value={city} onChange={(e) => handleInput(e.target)} id="inputCity" placeholder="Enter City" />
                 </FormGroup>
               </Col>
 
@@ -270,7 +280,7 @@ function ManagerRegistration() {
               <Col md={4}>
                 <FormGroup>
                   <Label for="inputZipcode"> Zipcode </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputZipcode" placeholder="Enter Zipcode" />
+                  <Input value={zipcode} onChange={(e) => handleInput(e.target)} id="inputZipcode" placeholder="Enter Zipcode" />
                 </FormGroup>
               </Col>
             </Row>
