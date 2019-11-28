@@ -29,7 +29,7 @@ function AdminFunctionalityPage() {
 
 
   const goBack = () => {
-    history.push("/");
+    history.goBack();
   }
 
   return (

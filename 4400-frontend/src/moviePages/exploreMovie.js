@@ -153,7 +153,7 @@ function ExploreMovie() {
   }, [])
 
   const goBack = () => {
-    history.push("/");
+    history.goBack();
   }
 
   const filter = () => {

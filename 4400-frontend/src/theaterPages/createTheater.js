@@ -74,7 +74,7 @@ function CreateTheater() {
   }
 
   const goBack = () => {
-    history.push("/register");
+    history.goBack();
   }
 
   const create = () => {

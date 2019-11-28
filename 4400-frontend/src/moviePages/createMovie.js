@@ -37,7 +37,7 @@ function CreateMovie() {
   }
 
   const goBack = () => {
-    history.push("/register");
+    history.goBack();
   }
 
   const create = () => {

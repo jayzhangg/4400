@@ -81,7 +81,7 @@ function CompanyDetail() {
   }, [])
 
   const goBack = () => {
-    history.push("/");
+    history.goBack();
   }
 
   return (

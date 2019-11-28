@@ -73,7 +73,7 @@ function ManageUser() {
   }
 
   const goBack = () => {
-    history.push("/");
+    history.goBack();
   }
 
   const handleCheckboxClick = (e) => {

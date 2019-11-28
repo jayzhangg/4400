@@ -36,7 +36,7 @@ function AdminCustomerFunctionalityPage() {
   }
 
   const goBack = () => {
-    history.push("/");
+    history.goBack();
   }
 
   return (

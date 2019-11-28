@@ -24,7 +24,7 @@ function ManagerFunctionalityPage() {
   }
 
   const goBack = () => {
-    history.push("/");
+    history.goBack();
   }
 
   return (

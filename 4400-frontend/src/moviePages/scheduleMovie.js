@@ -48,7 +48,7 @@ function ScheduleMovie() {
   }, [])
 
   const goBack = () => {
-    history.push("/register");
+    history.goBack();
   }
 
   const schedule = () => {
