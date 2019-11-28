@@ -99,6 +99,14 @@ function CreateTheater() {
       axios.get(`https://cs4400-api.herokuapp.com/admin/create_theater/${theaterName}/${companySelected.toString()}/${address}/${city}/${stateSelected.toString()}/${zipcode}/${capacity}/${managerSelected.toString()}`)
         .then((response) => {
           // console.log(response);
+          setTheaterName("");
+          setCompanySelected("Choose Company");
+          setAddress("");
+          setCity("");
+          setStateSelected("Choose State");
+          setZipcode("");
+          setCapacity("");
+          setManagerSelected("Choose Manager");
           setCreateSuccess(true);
         })
         .catch((err) => {
@@ -111,7 +119,7 @@ function CreateTheater() {
   const handleCompanyClick = (company) => {
     axios.get(`https://cs4400-api.herokuapp.com/admin/available_managers/${company}`)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         var managerNames = response.data.managers;
 
         setManagers(managerNames);
@@ -165,7 +173,7 @@ function CreateTheater() {
               <Col md={6}>
                 <FormGroup>
                   <Label for="inputTheaterName"> Theater Name </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputTheaterName" placeholder="Enter name" />
+                  <Input value={theaterName} onChange={(e) => handleInput(e.target)} id="inputTheaterName" placeholder="Enter name" />
                 </FormGroup>
               </Col>
 
@@ -202,14 +210,14 @@ function CreateTheater() {
 
             <FormGroup>
               <Label for="inputAddress"> Street Address </Label>
-              <Input onChange={(e) => handleInput(e.target)} id="inputAddress" placeholder="Enter address" />
+              <Input value={address} onChange={(e) => handleInput(e.target)} id="inputAddress" placeholder="Enter address" />
             </FormGroup>
 
             <Row>
               <Col md={4}>
                 <FormGroup>
                   <Label for="inputCity"> City </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputCity" placeholder="Enter City" />
+                  <Input value={city} onChange={(e) => handleInput(e.target)} id="inputCity" placeholder="Enter City" />
                 </FormGroup>
               </Col>
 
@@ -246,7 +254,7 @@ function CreateTheater() {
               <Col md={4}>
                 <FormGroup>
                   <Label for="inputZipcode"> Zipcode </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputZipcode" placeholder="Enter Zipcode" />
+                  <Input value={zipcode} onChange={(e) => handleInput(e.target)} id="inputZipcode" placeholder="Enter Zipcode" />
                 </FormGroup>
               </Col>
             </Row>
@@ -255,7 +263,7 @@ function CreateTheater() {
               <Col md={6}>
                 <FormGroup>
                   <Label for="inputCapacity"> Capacity </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputCapacity" placeholder="Enter capacity" />
+                  <Input value={capacity} onChange={(e) => handleInput(e.target)} id="inputCapacity" placeholder="Enter capacity" />
                 </FormGroup>
               </Col>
 
