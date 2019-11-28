@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from 'reactstrap';
 import { useHistory } from 'react-router-dom';
+import axios from 'axios';
 
 function ManagerFunctionalityPage() {
   let history = useHistory();

@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from 'reactstrap';
 import { useHistory } from 'react-router-dom';
+import axios from 'axios';
 
 function ManagerCustomerFunctionalityPage() {
   let history = useHistory();
   var statePayload = history.location.state;
+  var username = statePayload.username;
   // console.log(statePayload);
+
+  const [disableButton, setDisableButton] = useState(false);
 
   const overviewTheater = () => {
     history.push("/theater/overview", statePayload);
@@ -35,6 +39,23 @@ function ManagerCustomerFunctionalityPage() {
     history.goBack();
   }
 
+  useEffect(() => {
+    // Uncomment below and fill it out! Do the same for managerFunctionality page;
+
+  //   axios.get(/* URL FOR getting managers and theaters */)
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       // Hypothetically lets say:
+  //       var managers = response.data.managers;
+  //       if (!managers.includes(username)) {
+  //         setDisableButton(true);
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     })
+  // }, [])
+
   return (
     <div className="parent">
     <h2 className="myH2"> Manager-Customer Functionality </h2>
@@ -46,7 +67,7 @@ function ManagerCustomerFunctionalityPage() {
     <br/>
 
     <div>
-      <Button color="primary" onClick={ scheduleMovie }> Schedule Movie </Button>{' '}
+      <Button color="primary" disabled = {disableButton} onClick={ scheduleMovie }> Schedule Movie </Button>{' '}
       <Button color="primary" onClick={ exploreTheater }> Explore Theater </Button>{' '}
     </div>
     <br/>
