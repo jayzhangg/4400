@@ -12,7 +12,7 @@ function ManageUser() {
     accessor: 'username',
     Cell: props => (
       <div>
-        <input id={props.index} onClick={(e) => handleCheckboxClick(e)} type="checkbox"></input> {props.row.username} 
+        <input id={props.index} onClick={(e) => handleCheckboxClick(e)} type="checkbox"></input> {props.row.username}
       </div>
     )
     }, {
@@ -105,7 +105,7 @@ function ManageUser() {
                 newObj.creditCardCount = data[i].creditCardCount;
                 newObj.userType = data[i].userType;
                 newObj.status = data[i].status;
-        
+
                 if (selected.includes(i.toString())) {
                   newObj.status = "APPROVED";
                 }
@@ -137,7 +137,7 @@ function ManageUser() {
                 newObj.creditCardCount = data[i].creditCardCount;
                 newObj.userType = data[i].userType;
                 newObj.status = data[i].status;
-        
+
                 if (selected.includes(i.toString())) {
                   newObj.status = "DECLINED";
                 }
@@ -161,6 +161,8 @@ function ManageUser() {
 
     if (statusSelected === "Choose Status") {
       url += "/ALL";
+    } else {
+      url += `/${statusSelected}`
     }
 
     url += "/user_name/DES";
@@ -203,7 +205,7 @@ function ManageUser() {
   });
 
   return (
-      <div className="FullPage"> 
+      <div className="FullPage">
         <div className="LoginPage">
           <h2>Manage User</h2>
         </div>
