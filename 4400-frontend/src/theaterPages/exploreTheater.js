@@ -26,14 +26,16 @@ function ExploreTheater() {
     },
     {
       Header: "Address",
-      accessor: "address"
+      accessor: "address",
+      width: 225
     }, 
     {
       Header: "Company",
       accessor: "company"
     }
-]
-  var states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL",
+  ]
+   
+  var states = ["ALL", "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL",
    "GA", "HI", "ID", "IL", "IN", "IA", "KS",
     "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT",
      "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK",
@@ -109,49 +111,57 @@ function ExploreTheater() {
   }
 
   const filter = () => {
-    var useTheater = theaterSelected;
-    var useCompany = companySelected;
-
-    // console.log(useTheater, useCompany, city, stateSelected);
+    // console.log(theaterSelected, companySelected, city, stateSelected);
+    var url = `https://cs4400-api.herokuapp.com/user/filter_theater`;
     
-    if (useTheater === "Choose Theater") {
-      useTheater = "ALL";
-    }
-
-    if (useCompany === "Choose Company") {
-      useCompany = "ALL";
-    }
-
-    var url = `https://cs4400-api.herokuapp.com/user/filter_theater/${useTheater}/${useCompany}`;
-
-    if (city !== "" && stateSelected !== "Choose State") {
-      url += `/${city}/${stateSelected}`;
+    if (theaterSelected === "Choose Theater") {
+      url += "/ALL";
     } else {
-      axios.get(url)
-        .then((response) => {
-          console.log(response.data);
-          var theaterList = response.data.theaters;
-          var theaterData = [];
-          var theaterNames = [];
-
-          for (var i = 0; i < theaterList.length; i++) {
-            var temp = {}
-            temp.theater = theaterList[i][0];
-            temp.address = `${theaterList[i][1]}, ${theaterList[i][2]}, ${theaterList[i][3]} ${theaterList[i][4]}`;
-            temp.company = theaterList[i][5];
-            theaterData.push(temp);
-
-            if (!theaterNames.includes(theaterList[i][0])) {
-              theaterNames.push(theaterList[i][0]);
-            } 
-          }
-          setTheaters(theaterNames);
-          setData(theaterData);
-        })
-        .catch((err) => {
-          console.log(err);
-      });
+      url += `/${theaterSelected.toString()}`;
     }
+
+    if (companySelected === "Choose Company") {
+      url += "/ALL";
+    } else {
+      url += `/${companySelected.toString()}`;
+    }
+
+    if (city === "" ) {
+      url += "/%";
+    } else {
+      url += `/${city}`;
+    }
+
+    if (stateSelected === "ALL" || stateSelected === "Choose State") {
+      url += "/%";
+    } else {
+      url += `/${stateSelected.toString()}`;
+    }
+
+    axios.get(url)
+      .then((response) => {
+        console.log(response.data);
+        var theaterList = response.data.theaters;
+        var theaterData = [];
+        var theaterNames = [];
+
+        for (var i = 0; i < theaterList.length; i++) {
+          var temp = {}
+          temp.theater = theaterList[i][0];
+          temp.address = `${theaterList[i][1]}, ${theaterList[i][2]}, ${theaterList[i][3]} ${theaterList[i][4]}`;
+          temp.company = theaterList[i][5];
+          theaterData.push(temp);
+
+          if (!theaterNames.includes(theaterList[i][0])) {
+            theaterNames.push(theaterList[i][0]);
+          } 
+        }
+        setTheaters(theaterNames);
+        setData(theaterData);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
   }
 
   const logVisit = () => {
@@ -390,7 +400,7 @@ function ExploreTheater() {
             </Row>
 
             <Alert isOpen={notAllFieldsPresent} color="danger">
-              All fields must have a value!
+              You must select a city and enter a visit date!
             </Alert>
 
             <Alert isOpen={visitSuccess} color="success">

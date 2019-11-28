@@ -55,6 +55,7 @@ function ExploreMovie() {
   const [companies, setCompanies] = useState([]);     
   const [cards, setCards] = useState([]);
   const [city, setCity] = useState("");
+  const [seenMovies, setSeenMovies] = useState({});
 
   const [movieDropdownOpen, setMovieDropdownOpen] = useState(false);
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
@@ -75,6 +76,7 @@ function ExploreMovie() {
   const [moviePlayDateToFocused, setMoviePlayDateToFocused] = useState(false);
 
   const [notAllFieldsPresent, setNotAllFieldsPresent] = useState(false);
+  const [tooManyMovies, setTooManyMovies] = useState(false);
   const [viewSuccess, setViewSuccess] = useState(false);
   const [viewFail, setViewFail] = useState(false);
 
@@ -152,6 +154,27 @@ function ExploreMovie() {
       .catch((err) => {
         console.log(err);
     });
+
+    axios.get(`https://cs4400-api.herokuapp.com/customer/view_history/${username}`)
+    .then((response) => {
+      // console.log(response.data);
+      var historyList = response.data.history;
+      var viewHistory = {};
+
+      for (var i = 0; i < historyList.length; i++) {
+        var playDate = historyList[i][4];
+        if (viewHistory[playDate] == undefined) {
+          viewHistory[playDate] = 1;
+        } else {
+          viewHistory[playDate] += 1;
+        }
+      }
+      // console.log(viewHistory);
+      setSeenMovies(viewHistory);
+    })
+    .catch((err) => {
+      console.log(err);
+  });
   }, [])
 
   const goBack = () => {
@@ -162,6 +185,7 @@ function ExploreMovie() {
     setNotAllFieldsPresent(false);
     setViewSuccess(false);
     setViewFail(false);
+    setTooManyMovies(false);
     
     var url = `https://cs4400-api.herokuapp.com/customer/filter_movie`;
     
@@ -196,7 +220,7 @@ function ExploreMovie() {
       url += `/${formattedMovieFrom}/${formattedMovieTo}`;
     }
 
-    // console.log(useMovie, useCompany, useCity, useState, formattedMovieFrom, formattedMovieTo);
+    // console.log(movieSelected, companySelected, city, stateSelected, formattedMovieFrom, formattedMovieTo);
     // console.log(url);
 
     axios.get(url)
@@ -227,17 +251,30 @@ function ExploreMovie() {
     setNotAllFieldsPresent(false);
     setViewSuccess(false);
     setViewFail(false);
+    setTooManyMovies(false);
 
     var movie = data[parseInt(selected)];
     // console.log(movie, cardSelected);
+    var moviePlayDate = movie.playDate;
 
     if (movie === undefined || cardSelected === "Choose Card") {
       setNotAllFieldsPresent(true);
+
+    } else if (seenMovies[moviePlayDate] >= 3) {
+      setTooManyMovies(true);
 
     } else {
       axios.get(`https://cs4400-api.herokuapp.com/customer/view_movie/${username}/${cardSelected}/${movie.movie}/${movie.releaseDate}/${movie.playDate}/${movie.theater}/${movie.company}`)
         .then((response) => {
           // console.log(response.data);
+          // console.log("before", seenMovies);
+          if (seenMovies[moviePlayDate] === undefined) {
+            seenMovies[moviePlayDate] = 1;
+    
+          } else {
+            seenMovies[moviePlayDate] += 1;
+          }
+          // console.log("after", seenMovies);
           setViewSuccess(true);
         })
         .catch((err) => {
@@ -514,6 +551,10 @@ function ExploreMovie() {
 
             <Alert isOpen={viewSuccess} color="success">
               Viewing Successful!
+            </Alert>
+
+            <Alert isOpen={tooManyMovies} color="danger">
+              You can only watch 3 movies per day!
             </Alert>
 
             <Alert isOpen={viewFail} color="danger">
