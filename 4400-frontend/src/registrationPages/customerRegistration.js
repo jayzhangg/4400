@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Form, FormGroup, Label, Input, Col, Row, Alert, ListGroup, ListGroupItem } from 'reactstrap';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
@@ -50,15 +50,20 @@ function CustomerRegistration() {
     history.goBack();
   }
 
-  const register = () => {
+  const removeErrorMessages = () => {
     setPasswordMatch(false);
     setPasswordShort(false);
     setNotAllFieldsPresent(false);
     setRegisterSuccess(false);
     setRegisterFail(false);
     setInvalidCreditCardNums(false);
+    setBadCardLength(false);
+  }
 
-    console.log(firstName, lastName, username, password, confirmPassword, creditCards);
+  const register = () => {
+    removeErrorMessages();
+
+    // console.log(firstName, lastName, username, password, confirmPassword, creditCards);
 
     if (firstName === "" || lastName === "" || username === "" || password === "" || confirmPassword === "") {
       setNotAllFieldsPresent(true);
@@ -80,22 +85,28 @@ function CustomerRegistration() {
       for(var i = 0; i < creditCards.length; i++) {
         cards += `/${creditCards[i]}`;
       }
-      console.log(cards);  
+      // console.log(cards);  
 
       axios.get(`https://cs4400-api.herokuapp.com/register/customer/${firstName}/${lastName}/${username}/${password}/${confirmPassword}${cards}`)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
+          setFirstName("");
+          setLastName("");
+          setUsername("");
+          setPassword("");
+          setConfirmPassword("");
+          setCreditCards([]);
           setRegisterSuccess(true);
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
           setRegisterFail(true);
       });
     }
   }
 
   const addCard = () => {
-    setBadCardLength(false);
+    removeErrorMessages();
 
     if (creditCardNum.match(/^\d{16}$/)) {
       creditCards.push(creditCardNum);
@@ -107,6 +118,8 @@ function CustomerRegistration() {
   };
 
   const removeCard = (card) => {
+    removeErrorMessages();
+
     var indexToRemove = creditCards.indexOf(card);
     creditCards.splice(indexToRemove, 1);
     setCreditCards([...creditCards]);
@@ -138,35 +151,35 @@ function CustomerRegistration() {
               <Col md={6}>
                 <FormGroup>
                   <Label for="inputFirstName"> First Name </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputFirstName" placeholder="Enter first name" />
+                  <Input value={firstName} onChange={(e) => handleInput(e.target)} id="inputFirstName" placeholder="Enter first name" />
                 </FormGroup>
               </Col>
 
               <Col>
                 <FormGroup>
                   <Label for="inputLastName"> Last Name </Label>
-                  <Input onChange={(e) => handleInput(e.target)} id="inputLastName" placeholder="Enter last name" />
+                  <Input value={lastName} onChange={(e) => handleInput(e.target)} id="inputLastName" placeholder="Enter last name" />
                 </FormGroup>
               </Col>
             </Row>
 
             <FormGroup>
               <Label for="inputUsername"> Username </Label>
-              <Input onChange={(e) => handleInput(e.target)} id="inputUsername" placeholder="Enter username" />
+              <Input value={username} onChange={(e) => handleInput(e.target)} id="inputUsername" placeholder="Enter username" />
             </FormGroup>
 
             <Row>
               <Col md={6}>
                 <FormGroup>
                   <Label for="inputPassword"> Password </Label>
-                  <Input type="password" onChange={(e) => handleInput(e.target)} id="inputPassword" placeholder="Enter password" />
+                  <Input value={password} type="password" onChange={(e) => handleInput(e.target)} id="inputPassword" placeholder="Enter password" />
                 </FormGroup>
               </Col>
 
               <Col md={6}>
                 <FormGroup>
                   <Label for="inputConfirmPassword"> Confirm Password </Label>
-                  <Input type="password" onChange={(e) => handleInput(e.target)} id="inputConfirmPassword" placeholder="Enter password" />
+                  <Input value={confirmPassword} type="password" onChange={(e) => handleInput(e.target)} id="inputConfirmPassword" placeholder="Enter password" />
                 </FormGroup>
               </Col>
             </Row>
