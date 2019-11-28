@@ -60,7 +60,7 @@ function VisitHistory() {
         console.log(err);
     });
 
-    axios.get(`https://cs4400-api.herokuapp.com/user/visit_history/ALL/${username}/2010-03-21/2010-03-25`)
+    axios.get(`https://cs4400-api.herokuapp.com/user/visit_history/ALL/${username}/%/%`)
       .then((response) => {
         // console.log(response.data);
         var visitList = response.data.visits;
@@ -89,36 +89,48 @@ function VisitHistory() {
   const filter = () => {
     setNotAllFieldsPresent(false);
     // console.log(companySelected, moviePlayDateFrom, moviePlayDateTo);
+    var url = `https://cs4400-api.herokuapp.com/user/visit_history`;
 
-    if (companySelected === "Choose Company" || moviePlayDateFrom === undefined || moviePlayDateTo === undefined) {
-      setNotAllFieldsPresent(true);
+    if (companySelected === "Choose Company") {
+      url += "/ALL";
+
+    } else {
+      url += `/${companySelected.toString()}`;
+    }
+
+    url += `/${username}`;
+
+    if (moviePlayDateFrom === undefined || moviePlayDateTo === undefined) {
+      url += "/%/%";
 
     } else {
       var formattedDateFrom = moviePlayDateFrom.format("YYYY-MM-DD");
       var formattedDateTo = moviePlayDateTo.format("YYYY-MM-DD");
-
-      axios.get(`https://cs4400-api.herokuapp.com/user/visit_history/${companySelected.toString()}/${username}/${formattedDateFrom}/${formattedDateTo}`)
-        .then((response) => {
-          // console.log(response.data);
-          var visitList = response.data.visits;
-          var visits = [];
-
-          for (var i = 0; i < visitList.length; i++) {
-            var temp = {};
-            temp.theater = visitList[i][0];
-            temp.address = `${visitList[i][1]}, ${visitList[i][2]}, ${visitList[i][3]} ${visitList[i][4]}`;
-            temp.company = visitList[i][5];
-            temp.visitDate = visitList[i][6];
-            visits.push(temp);
-          }
-
-          setData(visits);
-        })
-        .catch((err) => {
-          console.log(err);
-      });
+      url += `/${formattedDateFrom}/${formattedDateTo}`;
     }
+    
+    axios.get(url)
+      .then((response) => {
+        // console.log(response.data);
+        var visitList = response.data.visits;
+        var visits = [];
+
+        for (var i = 0; i < visitList.length; i++) {
+          var temp = {};
+          temp.theater = visitList[i][0];
+          temp.address = `${visitList[i][1]}, ${visitList[i][2]}, ${visitList[i][3]} ${visitList[i][4]}`;
+          temp.company = visitList[i][5];
+          temp.visitDate = visitList[i][6];
+          visits.push(temp);
+        }
+
+        setData(visits);
+      })
+      .catch((err) => {
+        console.log(err);
+    });
   }
+  
   const handleCompanyClick = (company) => {
     setCompanySelected(company);
   }
