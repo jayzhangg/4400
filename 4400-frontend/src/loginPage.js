@@ -80,16 +80,16 @@ function LoginPage() {
             <Input type="password" onChange={(e) => handleInput(e.target)} id="inputPassword" placeholder="Enter password" />
           </FormGroup>
 
+          <div className="LoginButton">
+            <Button color="primary" onClick={ validateLogin }>Login</Button>{' '}
+            <Button color="primary" onClick={ navigateToRegister }>Register</Button>
+          </div>
+
           <Alert isOpen={showAlert} color="danger">
             Wrong Username + Password combination. Try again!
           </Alert>
 
         </Form>
-      </div>
-
-      <div className="LoginButton">
-        <Button color="primary" onClick={ validateLogin }>Login</Button>{' '}
-        <Button color="primary" onClick={ navigateToRegister }>Register</Button>
       </div>
 
     </div>

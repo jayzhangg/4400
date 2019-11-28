@@ -11,23 +11,33 @@ function CompanyDetail() {
   const columns = [
     {
       Header: "Name",
-      accessor: 'name'
+      accessor: 'name',
+      sortable: false,
+      filterable: false
       }, 
       {
         Header: "Manager",
-        accessor: "manager"
+        accessor: "manager",
+        sortable: false,
+        filterable: false
       }, 
       {
         Header: "City",
-        accessor: "city"
+        accessor: "city",
+        sortable: false,
+        filterable: false
       }, 
       {
         Header: "State",
-        accessor: "state"
+        accessor: "state",
+        sortable: false,
+        filterable: false
     }, 
     {
       Header: "Capacity",
-      accessor: "capacity"
+      accessor: "capacity",
+      sortable: false,
+      filterable: false
     }
   ]
 
