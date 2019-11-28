@@ -78,7 +78,8 @@ function ExploreTheater() {
     axios.get(`https://cs4400-api.herokuapp.com/companies`)
       .then((response) => {
         // console.log(response.data);
-        var companyList = response.data.companies;
+        var companyList = ["ALL"];
+        companyList = companyList.concat(response.data.companies);
 
         setCompanies(companyList);
       })
@@ -91,7 +92,7 @@ function ExploreTheater() {
         // console.log(response.data);
         var theaterList = response.data.theaters;
         var theaterData = [];
-        var theaterNames = [];
+        var theaterNames = ["ALL"];
 
         for (var i = 0; i < theaterList.length; i++) {
           var temp = {}

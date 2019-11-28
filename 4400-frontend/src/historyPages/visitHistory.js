@@ -58,7 +58,8 @@ function VisitHistory() {
     axios.get(`https://cs4400-api.herokuapp.com/companies`)
       .then((response) => {
         // console.log(response.data);
-        var companyList = response.data.companies;
+        var companyList = ["ALL"];
+        companyList = companyList.concat(response.data.companies);
 
         setCompanies(companyList);
       })

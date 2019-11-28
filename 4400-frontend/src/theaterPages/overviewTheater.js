@@ -107,28 +107,44 @@ function OverviewTheater() {
     setSelected(!selected);
   }
 
-  const setToAll = (param) => {
-    if (param === "" || param === undefined) {
-      return "%";
-    }
-    return param;
-  }
-
   const filter = () => {
-    // console.log(movieName, movieDurationFrom, movieDurationTo, selected, movieReleaseDateFrom, movieReleaseDateTo, moviePlayDateFrom, moviePlayDateTo);
+    console.log(movieName, movieDurationFrom, movieDurationTo, selected, movieReleaseDateFrom, movieReleaseDateTo, moviePlayDateFrom, moviePlayDateTo);
 
-    var useMovieName = setToAll(movieName);
-    var useMovieDurationFrom = setToAll(movieDurationFrom);
-    var useMovieDurationTo = setToAll(movieDurationTo);
-    var useMovieReleaseDateFrom = setToAll(movieReleaseDateFrom);
-    var useMovieReleaseDateTo = setToAll(movieReleaseDateTo);
-    var useMoviePlayDateFrom = setToAll(moviePlayDateFrom);
-    var useMoviePlayDateTo = setToAll(moviePlayDateTo);
+    var url = `https://cs4400-api.herokuapp.com/manager/filter_theater/${username}`;
 
-    // console.log(username, useMovieName, useMovieDurationFrom, useMovieDurationTo, useMovieReleaseDateFrom, useMovieReleaseDateTo, useMoviePlayDateFrom, useMoviePlayDateTo, selected);
-    // console.log(`https://cs4400-api.herokuapp.com/manager/filter_theater/${username}/${useMovieName}/${useMovieDurationFrom}/${useMovieDurationTo}/${useMovieReleaseDateFrom}/${useMovieReleaseDateTo}/${useMoviePlayDateFrom}/${useMoviePlayDateTo}/${selected}`);
+    if (movieName === "") {
+      url += "/%";
+    } else {
+      url += `/${movieName}`;
+    }
 
-    axios.get(`https://cs4400-api.herokuapp.com/manager/filter_theater/${username}/${useMovieName}/${useMovieDurationFrom}/${useMovieDurationTo}/${useMovieReleaseDateFrom}/${useMovieReleaseDateTo}/${useMoviePlayDateFrom}/${useMoviePlayDateTo}/${selected}`)
+    if (movieDurationFrom === "" || movieDurationTo === "") {
+      url += "/%/%";
+    } else {
+      url += `/${movieDurationFrom}/${movieDurationTo}`;
+    }
+
+    if (movieReleaseDateFrom === undefined || movieReleaseDateTo === undefined || movieReleaseDateFrom === null || movieReleaseDateTo === null) {
+      url += "/%/%";
+    } else {
+      var formattedReleaseDateFrom = movieReleaseDateFrom.format("YYYY-MM-DD");
+      var formattedReleaseDateTo = movieReleaseDateTo.format("YYYY-MM-DD");
+
+      url += `/${formattedReleaseDateFrom}/${formattedReleaseDateTo}`;
+    }
+
+    if (moviePlayDateFrom === undefined || moviePlayDateTo === undefined || moviePlayDateFrom === null || moviePlayDateTo === null) {
+      url += "/%/%";
+    } else {
+      var formattedPlayDateFrom = moviePlayDateFrom.format("YYYY-MM-DD");
+      var formattedPlayDateTo = moviePlayDateTo.format("YYYY-MM-DD");
+
+      url += `/${formattedPlayDateFrom}/${formattedPlayDateTo}`;
+    }
+
+    url += `/${selected}`;
+
+    axios.get(url)
       .then((response) => {
         console.log(response.data);
         var movieList = response.data.movies;

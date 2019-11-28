@@ -36,8 +36,10 @@ function ScheduleMovie() {
         var releaseDates = [];
 
         for (var i = 0; i < movieList.length; i++) {
-          movies.push(movieList[i][0]);
-          releaseDates.push(movieList[i][1]);
+          if (!movies.includes(movieList[i][0])) {
+            movies.push(movieList[i][0]);
+            releaseDates.push(movieList[i][1]);
+          }
         }
         setReleaseDateList(releaseDates);
         setMovies(movies);
@@ -61,11 +63,10 @@ function ScheduleMovie() {
       setNotAllFieldsPresent(true);
 
     } else {
-      var formattedReleaseDate = releaseDate.format("YYYY-MM-DD"); 
       var formattedPlayDate = playDate.format("YYYY-MM-DD"); 
-      console.log(formattedPlayDate, formattedReleaseDate, username, movieSelected.toString());
+      console.log(formattedPlayDate, releaseDate, username, movieSelected.toString());
 
-      axios.get(`https://cs4400-api.herokuapp.com/manager/schedule_movie/${username}/${movieSelected.toString()}/${formattedReleaseDate}/${formattedPlayDate}`)
+      axios.get(`https://cs4400-api.herokuapp.com/manager/schedule_movie/${username}/${movieSelected.toString()}/${releaseDate}/${formattedPlayDate}`)
         .then((response) => {
           // console.log(response.data);
           setRegisterSuccess(true);

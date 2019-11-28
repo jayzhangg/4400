@@ -265,7 +265,9 @@ function ExploreMovie() {
 
     var movie = data[parseInt(selected)];
     // console.log(movie, cardSelected);
-    var moviePlayDate = movie.playDate;
+    if (movie !== undefined) {
+      var moviePlayDate = movie.playDate;
+    }
 
     if (movie === undefined || cardSelected === "Choose Card") {
       setNotAllFieldsPresent(true);
