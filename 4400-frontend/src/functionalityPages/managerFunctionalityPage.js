@@ -8,19 +8,19 @@ function ManagerFunctionalityPage() {
   console.log(statePayload);
 
   const overviewTheater = () => {
-    history.push("/theater/overview");
+    history.push("/theater/overview", statePayload);
   }
 
   const exploreTheater = () => {
-    history.push("/theater/explore");
+    history.push("/theater/explore", statePayload);
   }
 
   const visitHistory = () => {
-    history.push("/history/visit");
+    history.push("/history/visit", statePayload);
   }
 
   const scheduleMovie = () => {
-    history.push("/movie/schedule");
+    history.push("/movie/schedule", statePayload);
   }
 
   const goBack = () => {

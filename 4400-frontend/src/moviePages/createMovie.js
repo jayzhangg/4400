@@ -47,7 +47,6 @@ function CreateMovie() {
     setNotAllFieldsPresent(false);
 
     // Add create logic 
-    var formattedDate = date.format('YYYY-MM-DD');
     console.log(formattedDate, name, date); 
 
     if (name === "" || duration === "" || date === undefined) {
@@ -57,6 +56,7 @@ function CreateMovie() {
       setBadDuration(true);
 
     } else {
+      var formattedDate = date.format('YYYY-MM-DD');
       axios.get(`https://cs4400-api.herokuapp.com/admin/create_movie/${name.toString()}/${duration}/${formattedDate}`)
         .then((response) => {
           // console.log(response);

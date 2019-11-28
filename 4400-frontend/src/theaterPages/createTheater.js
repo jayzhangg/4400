@@ -20,7 +20,7 @@ function CreateTheater() {
   const [capacity, setCapacity] = useState("");
 
   const [companies, setCompanies] = useState([]);
-  const [managers, setManagers] = useState([]);
+  const [managers, setManagers] = useState(["Please choose a company to see managers"]);
 
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [stateDropdownOpen, setstateDropdownOpen] = useState(false);

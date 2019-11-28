@@ -14,19 +14,25 @@ function OverviewTheater() {
   var username = statePayload.username;
   // console.log(statePayload);
 
-  const columns = [{
-    Header: "Movie Name",
-    accessor: 'movieName'
-    }, {
+  const columns = [
+    {
+      Header: "Movie Name",
+      accessor: 'movieName',
+      width: 250
+    }, 
+    {
       Header: "Duration",
       accessor: "duration"
-    }, {
+    }, 
+    {
       Header: "Release Date",
       accessor: "releaseDate"
-    }, {
+    }, 
+    {
       Header: "Play Date",
       accessor: "playDate"
-  }]
+    }
+  ]
 
   const [movieName, setMovieName] = useState("");
   const [movieDurationFrom, setMovieDurationFrom] = useState("");
@@ -86,7 +92,7 @@ function OverviewTheater() {
   }
 
   const goBack = () => {
-    history.push("/");
+    history.goBack();
   }
 
   const handleCheckboxClick = () => {
@@ -144,7 +150,7 @@ function OverviewTheater() {
           <h2>Theater Overview</h2>
         </div>
         <div>
-          <Form className="RegistrationForm">
+          <Form className="MovieExploreForm">
             <Row>
               <Col md={5}>
                 <FormGroup>

@@ -86,7 +86,7 @@ function ExploreMovie() {
       .then((response) => {
         // console.log(response.data);
         var movieList = response.data.movies;
-        var movies = [];
+        var movies = ["ALL"];
 
         for (var i = 0; i < movieList.length; i++) {
           movies.push(movieList[i][0]);
@@ -99,10 +99,15 @@ function ExploreMovie() {
 
     axios.get(`https://cs4400-api.herokuapp.com/companies`)
       .then((response) => {
-        // console.log(response.data);
+        console.log(response.data);
         var companyList = response.data.companies;
+        var companies = ["ALL"];
 
-        setCompanies(companyList);
+        for (var i = 0; i < companyList.length; i++) {
+          companies.push(companyList[i][0]);
+        }
+
+        setCompanies(companies);
       })
       .catch((err) => {
         console.log(err);

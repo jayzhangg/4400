@@ -4,25 +4,27 @@ import { useHistory } from 'react-router-dom';
 
 function AdminFunctionalityPage() {
   let history = useHistory();
+  var statePayload = history.location.state;
+  console.log(statePayload);
 
   const manageUser = () => {
-    history.push("/manage/user");
+    history.push("/manage/user", statePayload);
   }
 
   const exploreTheater = () => {
-    history.push("/theater/explore");
+    history.push("/theater/explore", statePayload);
   }
 
   const manageCompany = () => {
-    history.push("/manage/company");
+    history.push("/manage/company", statePayload);
   }
 
   const visitHistory = () => {
-    history.push("/history/visit");
+    history.push("/history/visit", statePayload);
   }
 
   const createMovie = () => {
-    history.push("/movie/create");
+    history.push("/movie/create", statePayload);
   }
 
 
