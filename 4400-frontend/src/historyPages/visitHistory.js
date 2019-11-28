@@ -17,19 +17,27 @@ function VisitHistory() {
   const columns = [
     {
       Header: "Theater",
-      accessor: "theater"
+      accessor: "theater",
+      sortable: false,
+      filterable: false
     }, 
     {
       Header: "Address",
-      accessor: "address"
+      accessor: "address",
+      sortable: false,
+      filterable: false
     }, 
     {
       Header: "Company",
-      accessor: "company"
+      accessor: "company",
+      sortable: false,
+      filterable: false
     },
     {
       Header: "Visit Date",
-      accessor: "visitDate"
+      accessor: "visitDate",
+      sortable: false,
+      filterable: false
     }
 ]
 
@@ -43,8 +51,6 @@ function VisitHistory() {
   const [moviePlayDateFromFocused, setMoviePlayDateFromFocused] = useState(false);
   const [moviePlayDateTo, setMoviePlayDateTo] = useState(moment.momentObj);
   const [moviePlayDateToFocused, setMoviePlayDateToFocused] = useState(false);
-
-  const [notAllFieldsPresent, setNotAllFieldsPresent] = useState(false);
 
   const companyToggle = () => setCompanyDropdownOpen(prevState => !prevState);
 
@@ -87,7 +93,6 @@ function VisitHistory() {
   }
 
   const filter = () => {
-    setNotAllFieldsPresent(false);
     // console.log(companySelected, moviePlayDateFrom, moviePlayDateTo);
     var url = `https://cs4400-api.herokuapp.com/user/visit_history`;
 
@@ -130,7 +135,7 @@ function VisitHistory() {
         console.log(err);
     });
   }
-  
+
   const handleCompanyClick = (company) => {
     setCompanySelected(company);
   }
@@ -228,10 +233,6 @@ function VisitHistory() {
                     defaultPageSize={5}
                     />
             </FormGroup>
-
-            <Alert isOpen={notAllFieldsPresent} color="danger">
-              All fields must have a value!
-            </Alert>
             
             <div className="LoginButton">
               <Button color="primary" onClick={ goBack }>Back</Button> {' '}

@@ -18,19 +18,27 @@ function OverviewTheater() {
     {
       Header: "Movie Name",
       accessor: 'movieName',
-      width: 250
+      width: 250,
+      sortable: false,
+      filterable: false
     }, 
     {
       Header: "Duration",
-      accessor: "duration"
+      accessor: "duration",
+      sortable: false,
+      filterable: false
     }, 
     {
       Header: "Release Date",
-      accessor: "releaseDate"
+      accessor: "releaseDate",
+      sortable: false,
+      filterable: false
     }, 
     {
       Header: "Play Date",
-      accessor: "playDate"
+      accessor: "playDate",
+      sortable: false,
+      filterable: false
     }
   ]
 

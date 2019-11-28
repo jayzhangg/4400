@@ -19,6 +19,8 @@ function ExploreMovie() {
       Header: "Movie",
       accessor: 'movie',
       width: 250,
+      sortable: false,
+      filterable: false,
       Cell: props => (
         <div>
           <input checked={selected === props.index.toString()} id={props.index} onChange={(e) => handleCheckboxClick(e)} type="radio"></input> {props.row.movie} 
@@ -27,20 +29,28 @@ function ExploreMovie() {
     }, 
     {
       Header: "Theater",
-      accessor: "theater"
+      accessor: "theater",
+      sortable: false,
+      filterable: false
     }, 
     {
       Header: "Address",
       accessor: "address",
-      width: 250
+      width: 250,
+      sortable: false,
+      filterable: false
     }, 
     {
       Header: "Company",
-      accessor: "company"
+      accessor: "company",
+      sortable: false,
+      filterable: false
     },
     {
       Header: "Play Date",
-      accessor: "playDate"
+      accessor: "playDate",
+      sortable: false,
+      filterable: false
     }
 ]
 

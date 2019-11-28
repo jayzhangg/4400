@@ -13,23 +13,33 @@ function ViewHistory() {
   const columns = [
     {
       Header: "Movie",
-      accessor: 'movie'
+      accessor: 'movie',
+      sortable: false,
+      filterable: false
     }, 
     {
       Header: "Theater",
-      accessor: "theater"
+      accessor: "theater",
+      sortable: false,
+      filterable: false
     }, 
     {
       Header: "Company",
-      accessor: "company"
+      accessor: "company",
+      sortable: false,
+      filterable: false
     },
     {
       Header: "Card #",
-      accessor: "cardNumber"
+      accessor: "cardNumber",
+      sortable: false,
+      filterable: false
     }, 
     {
       Header: "View Date",
-      accessor: "viewDate"
+      accessor: "viewDate",
+      sortable: false,
+      filterable: false
     }
 ]
 

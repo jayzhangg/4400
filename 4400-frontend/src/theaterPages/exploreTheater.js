@@ -18,6 +18,8 @@ function ExploreTheater() {
     {
       Header: "Theater",
       accessor: 'theater',
+      sortable: false,
+      filterable: false,
       Cell: props => (
         <div>
           <input checked={selected === props.index.toString()} id={props.index} onChange={(e) => handleCheckboxClick(e)} type="radio"></input> {props.row.theater} 
@@ -27,11 +29,15 @@ function ExploreTheater() {
     {
       Header: "Address",
       accessor: "address",
-      width: 225
+      width: 225,
+      sortable: false,
+      filterable: false
     }, 
     {
       Header: "Company",
-      accessor: "company"
+      accessor: "company",
+      sortable: false,
+      filterable: false
     }
   ]
    
