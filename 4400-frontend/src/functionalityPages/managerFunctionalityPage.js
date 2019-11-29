@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from 'reactstrap';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
@@ -6,7 +6,8 @@ import axios from 'axios';
 function ManagerFunctionalityPage() {
   let history = useHistory();
   var statePayload = history.location.state;
-  // console.log(statePayload);
+  var username = statePayload.username;
+  const [disableButton, setDisableButton] = useState(false);
 
   const overviewTheater = () => {
     history.push("/theater/overview", statePayload);
@@ -28,6 +29,19 @@ function ManagerFunctionalityPage() {
     history.goBack();
   }
 
+  useEffect(() => {
+    axios.get(`https://cs4400-api.herokuapp.com/managers`)
+      .then((response) => {
+        var managers = response.data.managers;
+        if (!managers.includes(username)) {
+          setDisableButton(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }, [])
+
   return (
     <div className="parent">
     <h2 className="myH2"> Manager-Only Functionality </h2>
@@ -39,7 +53,7 @@ function ManagerFunctionalityPage() {
     <br/>
 
     <div>
-      <Button color="primary" onClick={ scheduleMovie }> Schedule Movie </Button>{' '}
+      <Button color="primary" disabled = {disableButton} onClick={ scheduleMovie }> Schedule Movie </Button>{' '}
       <Button color="primary" onClick={ visitHistory }> Visit History </Button>{' '}
     </div>
     <br/>
