@@ -8,7 +8,6 @@ function ViewHistory() {
   let history = useHistory();
   var statePayload = history.location.state;
   var username = statePayload.username;
-  // console.log(history.location.state);
 
   const columns = [
     {

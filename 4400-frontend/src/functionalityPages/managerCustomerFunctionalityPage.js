@@ -7,7 +7,6 @@ function ManagerCustomerFunctionalityPage() {
   let history = useHistory();
   var statePayload = history.location.state;
   var username = statePayload.username;
-
   const [disableButton, setDisableButton] = useState(false);
 
   const overviewTheater = () => {
@@ -42,6 +41,7 @@ function ManagerCustomerFunctionalityPage() {
     axios.get(`https://cs4400-api.herokuapp.com/managers`)
       .then((response) => {
         var managers = response.data.managers;
+        managers = [].concat.apply([], managers);
         if (!managers.includes(username)) {
           setDisableButton(true);
         }

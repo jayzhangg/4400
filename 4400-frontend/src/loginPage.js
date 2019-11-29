@@ -38,7 +38,6 @@ function LoginPage() {
           userType = "user";
         }
 
-        // console.log(userType);
         var statePayload = {username: username, userType: userType};
         history.push(`/functionality/${userType}`, statePayload);
       })
